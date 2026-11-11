@@ -151,14 +151,14 @@ export class SearchEmployeePage {
   }
 
   async isMySearchPageExists(): Promise<boolean> {
-        try {
-            await this.pageHeading.waitFor({ state: 'visible', timeout: 5000 });
-            const isVisible = await this.pageHeading.isVisible();
-           // log(`My Search Employee page heading visibility: ${isVisible}`);
-            return isVisible;
-        } catch (error) {
-            console.log(`Error checking My Search Employee page heading visibility: ${error}`);
-            return false;
-        }
+    try {
+      await this.pageHeading.waitFor({ state: 'visible', timeout: 5000 });
+      const isVisible = await this.pageHeading.isVisible();
+      // log(`My Search Employee page heading visibility: ${isVisible}`);
+      return isVisible;
+    } catch (error) {
+      console.log(`Error checking My Search Employee page heading visibility: ${error}`);
+      return false;
     }
+  }
 }

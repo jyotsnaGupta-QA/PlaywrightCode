@@ -176,10 +176,10 @@ export class CreateEmployeePage {
     // Mirror your Java branch logic:
     if ("bp International Limited" === company || "bp USA" === company) {
       //await this.setPostalCode();
-     // await this.setCity();
+      // await this.setCity();
       await this.waitForPageToSettle();
-     // await this.setGeoMarket('Highest');
-     // await this.setAdditionalInfo();
+      // await this.setGeoMarket('Highest');
+      // await this.setAdditionalInfo();
     }
   }
 

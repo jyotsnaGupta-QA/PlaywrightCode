@@ -75,8 +75,8 @@ export class LoginPage {
         await expect(this.page).toHaveTitle(/Search Employee/i);
     }
 
-     async getloginErrorMessage(){
-        const errorMessage=await this.txtErrorMessage.textContent();
+    async getloginErrorMessage() {
+        const errorMessage = await this.txtErrorMessage.textContent();
         log(`Error message is: ${errorMessage}`);
         if (!errorMessage) {
             throw new Error('No login error message was displayed.');

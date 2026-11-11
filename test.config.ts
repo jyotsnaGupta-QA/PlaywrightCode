@@ -1,4 +1,4 @@
-export class TestConfig{
+/* export class TestConfig{
 
     appUrl="https://gocare.msbedrock.com/"
 
@@ -12,3 +12,4 @@ export class TestConfig{
     productQuantity="1"
     totalPrice="$0,000.00"
 }
+    */

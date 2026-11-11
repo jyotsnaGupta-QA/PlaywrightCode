@@ -9,4 +9,4 @@ test('Login and save session', async ({ page, context }) => {
   await loginPage.loginWithEnvCredentials();
   await context.storageState({ path: 'auth.json' });
 });
-  
+

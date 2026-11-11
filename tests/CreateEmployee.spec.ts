@@ -17,18 +17,18 @@ test('Create New Employee and verify in Search', async ({ page }) => {
   const maritalStatus = 'Single';
   const dob = '19-Jul-1990';        // align format to your app
   const company = 'bp International Limited'; // triggers branch in setCompany()
- // const gin = '3452345';       // ensure this is unique or handle duplicates in your test logic
+  // const gin = '3452345';       // ensure this is unique or handle duplicates in your test logic
   const primaryEmail = 'jyotsna.gupta@internationalsos.com';
   const secondaryEmail = 'jyotsna.gupta@xebia.com';
- // const empCategory = 'Employee';   // adjust if this is a text box or select
+  // const empCategory = 'Employee';   // adjust if this is a text box or select
 
   // --- Navigate to Create Employee ---
   await createPage.goto('/employee/createEmployee.aspx'); // adjust if needed
   console.log('** On Create Employee page **');
 
   // --- Fill the form ---
-  await createPage.setEmpStatus(status);   
-  
+  await createPage.setEmpStatus(status);
+
   // if 'Pre-employee', it will add recruiter details
   await createPage.setTitle(title);
   await createPage.setFirstName(firstName);
@@ -39,7 +39,7 @@ test('Create New Employee and verify in Search', async ({ page }) => {
   await createPage.setCompany(company);
   await createPage.setPriEmail(primaryEmail);
   await createPage.setSeconEmail(secondaryEmail);
- // await createPage.setEmpCategory(empCategory);
+  // await createPage.setEmpCategory(empCategory);
 
   // --- Submit ---
   await createPage.clickSubmit();
