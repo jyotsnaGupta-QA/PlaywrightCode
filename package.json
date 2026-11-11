@@ -4,18 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-      "test:master": "playwright test --grep @master", 
-      "test:sanity": "playwright test --grep @sanity", 
-      "test:regression": "playwright test --grep @regression", 
-      "test:datadriven": "playwright test --grep @datadriven", 
-      "test:master:headed": "playwright test --grep @master --headed", 
-      "test:sanity:debug": "playwright test --grep @sanity --debug" 
+    "testrail:cases": "node scripts/testrail-cases.js",
+    "test:master": "playwright test --grep @master",
+    "test:sanity": "playwright test --grep @sanity",
+    "test:regression": "playwright test --grep @regression",
+    "test:datadriven": "playwright test --grep @datadriven",
+    "test:master:headed": "playwright test --grep @master --headed",
+    "test:sanity:debug": "playwright test --grep @sanity --debug"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.64.1",
     "@types/node": "^25.2.3",
     "allure-commandline": "^2.36.0",
     "allure-playwright": "^3.4.5"
@@ -24,5 +25,17 @@
     "@faker-js/faker": "^10.3.0",
     "csv-parse": "^6.1.0",
     "xlsx": "^0.18.5"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jyotsnaGupta-QA/PlaywrightCode.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jyotsnaGupta-QA/PlaywrightCode/issues"
+  },
+  "homepage": "https://github.com/jyotsnaGupta-QA/PlaywrightCode#readme"
 }

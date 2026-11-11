@@ -5,6 +5,7 @@ import { expect, Locator, Page } from '@playwright/test';
 type EmpStatusOptions = {
   recruiterLastName?: string;
   recruiterEmail?: string;
+  ginNumber?: string | number;
 };
 
 export class CreateEmployeePage {
@@ -107,15 +108,11 @@ export class CreateEmployeePage {
     this.successOrErrorAlert = page.locator('.SuccessBg, .ErrorBg'); // aligns with your XPaths
   }
 
-  /**
-   * Go directly to Create Employee page.
-   * Adjust the path to your actual route if different.
-   */
   async goto(path = '/employee/createEmployee.aspx') {
     await this.page.goto(path);
     await this.page.waitForLoadState('domcontentloaded');
     // Best-effort heading wait (not all pages have ARIA headings)
-    await this.pageTitle.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
+    await this.pageTitle.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => { });
   }
 
   /**
@@ -132,7 +129,11 @@ export class CreateEmployeePage {
     await this.drpEmployeeStatus.selectOption({ label: status });
 
     // Mirror your Java branching:
-    if ('Pre-employee' === status) {
+    if (status === 'Active') {
+      const ginNumber = opts.ginNumber ?? '654789'
+      await this.setGIN(ginNumber);
+    }
+    else if ('Pre-employee' === status) {
       const recruiterLastName = opts.recruiterLastName ?? 'mark';
       const recruiterEmail = opts.recruiterEmail ?? 'gpt.jyotsna@gmail.com';
 
@@ -173,21 +174,19 @@ export class CreateEmployeePage {
     await this.drpCompany.selectOption({ label: company });
 
     // Mirror your Java branch logic:
-   if ("bp International Limited" === company || "bp USA" === company) {
-      await this.setPostalCode();
-      await this.setCity();
+    if ("bp International Limited" === company || "bp USA" === company) {
+      //await this.setPostalCode();
+     // await this.setCity();
       await this.waitForPageToSettle();
-      await this.setGeoMarket('Highest');
-      await this.setAdditionalInfo();
+     // await this.setGeoMarket('Highest');
+     // await this.setAdditionalInfo();
     }
   }
 
   async setGIN(value: number | string) {
     await this.txtGINNumber.fill(String(value));
-    
-  await this.txtGINNumber.waitFor({ state: 'visible' });
-  await this.txtGINNumber.fill(String(value))
-
+    await this.txtGINNumber.waitFor({ state: 'visible' });
+    await this.txtGINNumber.fill(String(value))
   }
 
   async setApplicationID(value: string) {
@@ -244,6 +243,7 @@ export class CreateEmployeePage {
 
   async setGeoMarket(value: string) {
     await this.drpGeoMarket.scrollIntoViewIfNeeded();
+    await this.page.click('body');
     await this.waitForPageToSettle();
     await this.drpGeoMarket.selectOption({ label: value });
   }
@@ -253,13 +253,13 @@ export class CreateEmployeePage {
   }
 
   async setSituation(value: string) {
-    await this.drpGeoMarket.scrollIntoViewIfNeeded();
+    await this.drpSituation.scrollIntoViewIfNeeded();
     await this.drpSituation.selectOption({ label: value });
   }
 
   async setAdditionalInfo() {
     await this.waitForPageToSettle();
-    await this.drpGeoMarket.scrollIntoViewIfNeeded();
+    // await this.drpGeoMarket.scrollIntoViewIfNeeded();
 
     await this.drpEmployeeAccompanied.selectOption({ label: 'No' });
     await this.drpOGUKRequired.selectOption({ label: 'Yes' });
@@ -280,7 +280,7 @@ export class CreateEmployeePage {
   async getCreationOutcome(): Promise<{ isSuccess: boolean; text: string }> {
     await this.waitForPageToSettle();
     const box = this.successOrErrorAlert.first();
-    await box.waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
+    await box.waitFor({ state: 'visible', timeout: 10000 }).catch(() => { });
     const text = (await box.textContent())?.trim() ?? '';
     const isSuccess = /success/i.test(text) || /has been successfully created/i.test(text);
     return { isSuccess, text };
@@ -301,14 +301,14 @@ export class CreateEmployeePage {
    */
   async waitForPageToSettle() {
     await this.page.waitForLoadState('domcontentloaded');
-    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await this.page.waitForLoadState('networkidle').catch(() => { });
     await this.waitForLoaderToDisappear();
   }
 
   async waitForLoaderToDisappear() {
     const loader = this.page.locator('.loading, .loader, #loader, .ajax-loader');
     if (await loader.first().isVisible().catch(() => false)) {
-      await loader.first().waitFor({ state: 'hidden', timeout: 15000 }).catch(() => {});
+      await loader.first().waitFor({ state: 'hidden', timeout: 15000 }).catch(() => { });
     }
   }
 

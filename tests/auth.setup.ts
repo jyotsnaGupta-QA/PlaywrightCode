@@ -10,8 +10,8 @@ test('Login and save session', async ({ page, context }) => {
   await page.goto('https://gocare.msbedrock.com/');
 
   // Perform login
-  await loginPage.setUsername('XXXXXX');
-  await loginPage.setPassword('XXXXXX');
+  await loginPage.setUsername('JyotsnaGupta');
+  await loginPage.setPassword('Xebia@123456789');
   await loginPage.setCapcha('capchaInputField');
  // await loginPage.clickLogin();
 

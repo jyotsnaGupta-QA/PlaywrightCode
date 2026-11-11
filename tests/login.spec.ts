@@ -17,9 +17,5 @@ test.afterEach(async ({ page }) => {
 
 test('user login test', async ({ page }) => {
 
-   // await loginPage.setUsername(config.username);
-   // await loginPage.setPassword(config.password);
-   // await loginPage.setCapcha(config.capchaInputField);
-   // await loginPage.clickLogin();
     await loginPage.verifyLoginSuccess();
 });

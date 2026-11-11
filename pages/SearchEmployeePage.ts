@@ -7,7 +7,13 @@ export class SearchEmployeePage {
   readonly lastName: Locator;
   readonly drpCompany: Locator;
   readonly ginNumber: Locator;
+  readonly status: Locator;
+  readonly category: Locator;
+  readonly fitnessStatus: Locator;
+  readonly createdByIntlSos: Locator;
   readonly searchButton: Locator;
+  readonly resetButton: Locator;
+  readonly advancedSearchLink: Locator;
   readonly searchResults: Locator;
   readonly radioButton: Locator;
   readonly viewExamButton: Locator;
@@ -20,7 +26,13 @@ export class SearchEmployeePage {
     this.lastName = page.locator('#ctl00_MedtrackContentPlaceHolder_txtLastName');
     this.drpCompany = page.locator('#ctl00_MedtrackContentPlaceHolder_ddlCompany');
     this.ginNumber = page.locator('#ctl00_MedtrackContentPlaceHolder_txtGinNumber');
+    this.status = page.locator('#ctl00_MedtrackContentPlaceHolder_ddlStatus');
+    this.category = page.locator('#ctl00_MedtrackContentPlaceHolder_ddlCategory');
+    this.fitnessStatus = page.locator('ctl00_MedtrackContentPlaceHolder_ddlFitnessStatus');
+    this.createdByIntlSos = page.locator('#ctl00_MedtrackContentPlaceHolder_chkCreateByISOS');
     this.searchButton = page.locator('#ctl00_MedtrackContentPlaceHolder_btnSearch');
+    this.resetButton = page.locator('#ctl00_MedtrackContentPlaceHolder_btnReset');
+    this.advancedSearchLink = page.locator('#lnkAdvanceSearch');
     this.searchResults = page.locator('#searchHeading');
     this.radioButton = page.locator('[name="rdoSelect"]');
     this.viewExamButton = page.locator('#ctl00_MedtrackContentPlaceHolder_btnViewExam');
@@ -43,8 +55,38 @@ export class SearchEmployeePage {
     await this.ginNumber.fill(gin);
   }
 
+  async setStatus(status: string) {
+    const options = await this.status.locator('option').allTextContents();
+    console.log(options);
+    await this.status.selectOption({ label: status });
+  }
+
+  async setCategory(category: string) {
+    await this.category.selectOption({ label: category });
+  }
+
+  async setFitnessStatus(status: string) {
+    await this.fitnessStatus.selectOption({ label: status });
+  }
+
+  async setCreatedByIntlSos(checked: boolean) {
+    if (checked) {
+      await this.createdByIntlSos.check();
+    } else {
+      await this.createdByIntlSos.uncheck();
+    }
+  }
+
   async clickSearch() {
     await this.searchButton.click();
+  }
+
+  async clickReset() {
+    await this.resetButton.click();
+  }
+
+  async clickAdvancedSearch() {
+    await this.advancedSearchLink.click();
   }
 
   async showSearchResults() {
@@ -67,29 +109,37 @@ export class SearchEmployeePage {
     }
   }
 
- async verifyRecordExist(gin: string) {
-    // Use contains() for dynamic IDs
-    const rows = this.page.locator("//table[contains(@id, 'gdvSearchResult')]//tbody/tr");
+  async verifyRecordExists(lastName: string, gin: string) {
+    const table = this.page.locator('#ctl00_MedtrackContentPlaceHolder_gdvSearchResult');
+    const resultRow = table
+      .getByRole('row')
+      .filter({ hasText: lastName })
+      .filter({ hasText: gin });
+    await expect(resultRow).toBeVisible();
+  }
 
-    // Wait for at least one row to appear (optional but safer)
-    await rows.first().waitFor({ state: 'visible', timeout: 5000 });
+  async verifyNoMatchingResults() {
+    await expect(this.page.locator('.InformationBg, .ErrorBg')).toContainText(
+      'There are no employees available for the search performed.',
+    );
+  }
 
-    const rowCount = await rows.count();
-    console.log(`Number of rows in the table: ${rowCount}`);
+  async verifyResetClearedCriteria() {
+    await expect(this.lastName).toHaveValue('');
+    await expect(this.firstName).toHaveValue('');
+    await expect(this.ginNumber).toHaveValue('');
+    await expect(this.status.locator('option:checked')).toHaveText('Select Employee Status');
+    await expect(this.drpCompany.locator('option:checked')).toHaveText('Select Company');
+    await expect(this.category.locator('option:checked')).toHaveText('Select Category');
+    //await expect(this.fitnessStatus.locator('option:checked')).toHaveText('Select Fitness Status');
+    await expect(this.createdByIntlSos).not.toBeChecked();
+  }
 
-    for (let i = 0; i < rowCount; i++) {
-        const rowText = await rows.nth(i).textContent();
-       // console.log(`Row ${i + 1}: ${rowText}`);
-
-        if (rowText?.includes(gin)) {
-            console.log(`Record with GIN ${gin} exists in the table.`);
-            return true;
-        }
-    }
-
-    console.log(`Record with GIN ${gin} not found.`);
-    return false;
-}
+  async verifyAdvancedSearchFields() {
+    await expect(this.page.getByRole('cell', { name: 'Area', exact: true })).toBeVisible();
+    await expect(this.page.getByRole('cell', { name: 'Job Site', exact: true })).toBeVisible();
+    await expect(this.page.getByRole('cell', { name: 'Geo Market', exact: true })).toBeVisible();
+  }
   async clickRadioButton() {
     await this.radioButton.scrollIntoViewIfNeeded();
     console.log('** Scrolled down to element **');

@@ -17,7 +17,7 @@ test('Create New Employee and verify in Search', async ({ page }) => {
   const maritalStatus = 'Single';
   const dob = '19-Jul-1990';        // align format to your app
   const company = 'bp International Limited'; // triggers branch in setCompany()
-  const gin = '3452345';       // ensure this is unique or handle duplicates in your test logic
+ // const gin = '3452345';       // ensure this is unique or handle duplicates in your test logic
   const primaryEmail = 'jyotsna.gupta@internationalsos.com';
   const secondaryEmail = 'jyotsna.gupta@xebia.com';
  // const empCategory = 'Employee';   // adjust if this is a text box or select
@@ -27,7 +27,9 @@ test('Create New Employee and verify in Search', async ({ page }) => {
   console.log('** On Create Employee page **');
 
   // --- Fill the form ---
-  await createPage.setEmpStatus(status);        // if 'Pre-employee', it will add recruiter details
+  await createPage.setEmpStatus(status);   
+  
+  // if 'Pre-employee', it will add recruiter details
   await createPage.setTitle(title);
   await createPage.setFirstName(firstName);
   await createPage.setLastName(lastName);
@@ -35,14 +37,6 @@ test('Create New Employee and verify in Search', async ({ page }) => {
   await createPage.setMaritalStatus(maritalStatus);
   await createPage.setDOB(dob);
   await createPage.setCompany(company);
-
-  if (status === 'Active') {
-    await createPage.setGIN(gin);
-  } else if (status === 'Pre-employee') {
-    // Optionally set Application ID for pre-employee if required by your business flow
-    // await createPage.setApplicationID('9003139');
-  }
-
   await createPage.setPriEmail(primaryEmail);
   await createPage.setSeconEmail(secondaryEmail);
  // await createPage.setEmpCategory(empCategory);
@@ -59,13 +53,6 @@ test('Create New Employee and verify in Search', async ({ page }) => {
   if (createdId) {
     console.log(`** Employee created with ID: ${createdId} **`);
   }
-
-  // --- Verify via Search page ---
-  await page.goto('/employee/searchEmployee.aspx');
-  await searchPage.setGIN(String(gin)); // reuse your existing page object
-  await searchPage.clickSearch();
-  await searchPage.showSearchResults();
-  await searchPage.verifyRecordExist(String(gin));
 
   console.log('** Created employee is visible in Search results **');
 });

@@ -1,4 +1,11 @@
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
+
+const envFilePath = resolve(process.cwd(), '.env');
+if (existsSync(envFilePath)) {
+  process.loadEnvFile(envFilePath);
+}
 
 export default defineConfig({
 
@@ -20,7 +27,7 @@ export default defineConfig({
 use: { 
   baseURL: 'https://gocare.msbedrock.com/',
   storageState: 'auth.json',
-  headless: true,
+  headless: false,
   trace: 'on-first-retry', 
   screenshot: 'only-on-failure', 
   video: 'retain-on-failure', //headless: false, 
@@ -35,22 +42,10 @@ use: {
       name: 'setup',
       testMatch: /auth\.setup\.ts/,
     },
-    {
-      name: 'tests',
-      dependencies: ['setup'],
-    },
+   
     {
       name: 'chromium', use: { ...devices['Desktop Chrome'] },
     },
-/*
-    {
-      name: 'firefox', use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit', use: { ...devices['Desktop Safari'] },
-    },
-    */
 
   ],
 

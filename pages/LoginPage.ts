@@ -25,7 +25,11 @@ export class LoginPage {
         this.txtErrorMessage = page.locator("//div[@class='ErrorBg']");
     }
 
-    
+    async goto() {
+        await this.page.goto('/');
+        await expect(this.username).toBeVisible();
+    }
+
     //action methods
     async setUsername(username: string) {
         await this.username.fill(username);
@@ -34,23 +38,21 @@ export class LoginPage {
     async setPassword(password: string) {
         await this.password.fill(password);
     }
-    async setCapcha(capchaInputField: string) {
-        const myCaptha = await this.capchaText.textContent();
-        const strOne = myCaptha!.split("+");
+    async setCapcha(_capchaInputField?: string) {
+        const captchaText = await this.capchaText.textContent();
+        const numbers = captchaText?.match(/\d+/g);
 
-        const s1 = strOne[0].trim();
-        const s2 = strOne[1];
-        const s3 = s2.split("=");
-        const s4 = s3[0].trim();
+        if (!numbers || numbers.length < 2) {
+            throw new Error('The login CAPTCHA did not contain a readable addition problem.');
+        }
 
-        const intOne = parseInt(s1);
-        const intTwo = parseInt(s4);
-
-        const sum = intOne + intTwo;
-
-        await this.capchaInputField.type(sum.toString());
+        const answer = Number(numbers[0]) + Number(numbers[1]);
+        //await this.capchaInputField.fill(String(answer));
+        await this.capchaInputField.pressSequentially(String(answer));
+        await this.capchaInputField.press('Tab');
     }
     async clickLogin() {
+        await this.page.locator('body').click();
         await this.loginSubmit.click();
     }
     async verifyLoginSuccess() {
