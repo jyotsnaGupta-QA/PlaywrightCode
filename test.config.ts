@@ -10,5 +10,5 @@ export class TestConfig{
     //product details
     productName="Medtrack"
     productQuantity="1"
-    totalPrice="$1,000.00"
+    totalPrice="$0,000.00"
 }

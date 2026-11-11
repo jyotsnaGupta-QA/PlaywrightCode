@@ -38,7 +38,7 @@ export class LoginPage {
     async setPassword(password: string) {
         await this.password.fill(password);
     }
-    async setCapcha(_capchaInputField?: string) {
+    async setCapcha() {
         const captchaText = await this.capchaText.textContent();
         const numbers = captchaText?.match(/\d+/g);
 
@@ -47,7 +47,7 @@ export class LoginPage {
         }
 
         const answer = Number(numbers[0]) + Number(numbers[1]);
-        //await this.capchaInputField.fill(String(answer));
+        await this.capchaInputField.click();
         await this.capchaInputField.pressSequentially(String(answer));
         await this.capchaInputField.press('Tab');
     }
@@ -55,13 +55,33 @@ export class LoginPage {
         await this.page.locator('body').click();
         await this.loginSubmit.click();
     }
+
+    async loginWithEnvCredentials() {
+        const username = process.env.MEDTRACK_USERNAME;
+        const password = process.env.MEDTRACK_PASSWORD;
+
+        if (!username || !password) {
+            throw new Error('Set MEDTRACK_USERNAME and MEDTRACK_PASSWORD in .env to run the login test.');
+        }
+
+        await this.setUsername(username);
+        await this.setPassword(password);
+        await this.setCapcha();
+        await this.clickLogin();
+        await this.verifyLoginSuccess();
+    }
+
     async verifyLoginSuccess() {
-    //await expect(this.page.locator("text=MedFit - Search Employee")).toBeVisible();
-    await expect(this.page).toHaveTitle(/Search Employee/i);  }
+        await expect(this.page).toHaveTitle(/Search Employee/i);
+    }
+
      async getloginErrorMessage(){
         const errorMessage=await this.txtErrorMessage.textContent();
         log(`Error message is: ${errorMessage}`);
-        return errorMessage!.trim();
+        if (!errorMessage) {
+            throw new Error('No login error message was displayed.');
+        }
+        return errorMessage.trim();
     }
     async clickLogout() {
         await this.logout.click();
