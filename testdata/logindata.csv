@@ -1,3 +1,6 @@
-testName,username,password,expectedResult
-Valid login,JyotsnaGupta,Xebia@1234567,success
-Invalid login,JyotsnaGupta,abcxyx,failure
+testRailCaseId,testName,scenario,requiresExplicitOptIn
+C8928020,"Valid account with invalid password",invalidPassword,true
+C8928021,"Submit login with blank fields",blankFields,false
+C8928022,"Navigate through Forgot Password link",forgotPassword,false
+C8928023,"Invalid synthetic credentials",invalidCredentials,true
+C8928025,"Forgot Password link opens recovery page",forgotPassword,false

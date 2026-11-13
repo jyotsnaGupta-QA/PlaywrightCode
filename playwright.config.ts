@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
 
 const envFilePath = resolve(process.cwd(), '.env');
+const authStatePath = 'playwright/.auth/user.json';
 if (existsSync(envFilePath)) {
   process.loadEnvFile(envFilePath);
 }
@@ -11,7 +12,7 @@ export default defineConfig({
 
   testDir: './tests',
 
-  timeout: 30 * 1000, //30000 ms(30 secs) 
+  timeout: 20 * 1000, //30000 ms(30 secs) 
   fullyParallel: false,
   //retries: process.env.CI ? 2 : 0, 
   retries: 1,
@@ -26,7 +27,7 @@ export default defineConfig({
   ],
   use: {
     baseURL: 'https://gocare.msbedrock.com/',
-    storageState: 'auth.json',
+    storageState: authStatePath,
     headless: false,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -45,12 +46,15 @@ export default defineConfig({
 
     {
       name: 'chromium',
+      dependencies: ['setup'],
       use: { ...devices['Desktop Chrome'] },
     },
-    {
+
+   /* {
       name: 'webkit',
+      dependencies: ['setup'],
       use: { ...devices['Desktop Safari'] },
-    },
+    }, */
 
   ],
 

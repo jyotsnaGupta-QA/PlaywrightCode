@@ -79,7 +79,7 @@ async function fetchCases(configuration) {
     cases.push(...pageCases);
     offset += pageCases.length;
 
-    if (pageCases.length < pageSize || (Number.isFinite(payload?.size) && offset >= payload.size)) {
+    if (pageCases.length < pageSize) {
       return cases;
     }
   }

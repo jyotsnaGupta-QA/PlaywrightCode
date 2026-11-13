@@ -1,58 +1,73 @@
-// tests/createEmp.spec.ts
-import { test, expect } from '@playwright/test';
-import { CreateEmployeePage } from '../pages/CreateEmployeePage';
-import { SearchEmployeePage } from '../pages/SearchEmployeePage';
-import { utils } from 'xlsx';
+import { randomUUID } from 'node:crypto';
+import { Page, test } from '@playwright/test';
+import { CreateEmployeePage, type EmployeeFormData } from '../pages/CreateEmployeePage';
+import { LoginPage } from '../pages/LoginPage';
+import { DataProvider } from '../utils/dataProvider';
 
-test('Create New Employee and verify in Search', async ({ page }) => {
-  const createPage = new CreateEmployeePage(page);
-  const searchPage = new SearchEmployeePage(page);
+type EmployeeScenarioData = Omit<EmployeeFormData, 'firstName' | 'lastName' | 'ginNumber' | 'primaryEmail'>;
 
-  // --- Test Data ---
-  const firstName = 'Automation';
-  const lastName = 'BP';
-  const status = 'Active'; // or 'Pre-employee'
-  const title = 'Mr';
-  const gender = 'Male';
-  const maritalStatus = 'Single';
-  const dob = '19-Jul-1990';        // align format to your app
-  const company = 'bp International Limited'; // triggers branch in setCompany()
-  // const gin = '3452345';       // ensure this is unique or handle duplicates in your test logic
-  const primaryEmail = 'jyotsna.gupta@internationalsos.com';
-  const secondaryEmail = 'jyotsna.gupta@xebia.com';
-  // const empCategory = 'Employee';   // adjust if this is a text box or select
+const scenarioData: EmployeeScenarioData = DataProvider.getTestDataFromJson(
+  'testdata/create-emp-data.json',
+);
 
-  // --- Navigate to Create Employee ---
-  await createPage.goto('/employee/createEmployee.aspx'); // adjust if needed
-  console.log('** On Create Employee page **');
+function createSyntheticEmployee(): EmployeeFormData {
+  const suffix = randomUUID().replace(/-/g, '');
+  return {
+    ...scenarioData,
+    firstName: `Qa${suffix.slice(0, 8)}`,
+    lastName: `Test${suffix.slice(8, 16)}`,
+    ginNumber: `9${suffix.slice(0, 7)}`,
+    primaryEmail: `qa-${suffix.slice(0, 20)}@example.invalid`,
+  };
+}
 
-  // --- Fill the form ---
-  await createPage.setEmpStatus(status);
+async function login(page: Page) {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.loginWithEnvCredentials();
+}
 
-  // if 'Pre-employee', it will add recruiter details
-  await createPage.setTitle(title);
-  await createPage.setFirstName(firstName);
-  await createPage.setLastName(lastName);
-  await createPage.setGender(gender);
-  await createPage.setMaritalStatus(maritalStatus);
-  await createPage.setDOB(dob);
-  await createPage.setCompany(company);
-  await createPage.setPriEmail(primaryEmail);
-  await createPage.setSeconEmail(secondaryEmail);
-  // await createPage.setEmpCategory(empCategory);
+test.use({ storageState: { cookies: [], origins: [] } });
 
-  // --- Submit ---
-  await createPage.clickSubmit();
+test('C8927852 - prepare synthetic employee details without submitting @sanity', async ({ page }) => {
+  await login(page);
 
-  // --- Verify success (or log error) ---
-  const outcome = await createPage.getCreationOutcome();
-  console.log(`** Creation outcome: ${outcome.text} **`);
-  await createPage.expectCreationSucceeded();
+  const employeePage = new CreateEmployeePage(page);
+  const employee = createSyntheticEmployee();
+  await employeePage.goto();
+  await employeePage.fillEmployeeForm(employee);
+  await employeePage.verifyEmployeeForm(employee);
+});
 
-  const createdId = createPage.getEmployeeIdFromUrl();
-  if (createdId) {
-    console.log(`** Employee created with ID: ${createdId} **`);
-  }
+test('C8927852 - create employee (persistent; explicit approval required)', async ({ page }) => {
+  test.skip(
+    process.env.ENABLE_PERSISTENT_EMPLOYEE_TESTS !== 'true',
+    'Requires separate approval to create a persistent employee record in a dedicated non-production tenant.',
+  );
 
-  console.log('** Created employee is visible in Search results **');
+  await login(page);
+  const employeePage = new CreateEmployeePage(page);
+  await employeePage.goto();
+  await employeePage.fillEmployeeForm(createSyntheticEmployee());
+  await employeePage.submit();
+  await employeePage.verifyCreationSucceeded();
+});
+
+test('C8927853 - reject invalid employee data (persistent submission; explicit approval required)', async ({ page }) => {
+  test.skip(
+    process.env.ENABLE_PERSISTENT_EMPLOYEE_TESTS !== 'true',
+    'Submission is gated because server validation behavior could create or alter an employee record.',
+  );
+
+  await login(page);
+  const employeePage = new CreateEmployeePage(page);
+  const employee = createSyntheticEmployee();
+  await employeePage.goto();
+  await employeePage.fillEmployeeForm({
+    ...employee,
+    ginNumber: 'INVALID-GIN',
+    primaryEmail: 'not-an-email',
+  });
+  await employeePage.submit();
+  await employeePage.verifyCreationRejected();
 });

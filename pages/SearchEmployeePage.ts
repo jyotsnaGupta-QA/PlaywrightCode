@@ -28,7 +28,7 @@ export class SearchEmployeePage {
     this.ginNumber = page.locator('#ctl00_MedtrackContentPlaceHolder_txtGinNumber');
     this.status = page.locator('#ctl00_MedtrackContentPlaceHolder_ddlStatus');
     this.category = page.locator('#ctl00_MedtrackContentPlaceHolder_ddlCategory');
-    this.fitnessStatus = page.locator('ctl00_MedtrackContentPlaceHolder_ddlFitnessStatus');
+    this.fitnessStatus = page.locator('#ctl00_MedtrackContentPlaceHolder_ddlFitnessStatus');
     this.createdByIntlSos = page.locator('#ctl00_MedtrackContentPlaceHolder_chkCreateByISOS');
     this.searchButton = page.locator('#ctl00_MedtrackContentPlaceHolder_btnSearch');
     this.resetButton = page.locator('#ctl00_MedtrackContentPlaceHolder_btnReset');
@@ -56,8 +56,6 @@ export class SearchEmployeePage {
   }
 
   async setStatus(status: string) {
-    const options = await this.status.locator('option').allTextContents();
-    console.log(options);
     await this.status.selectOption({ label: status });
   }
 
@@ -89,33 +87,19 @@ export class SearchEmployeePage {
     await this.advancedSearchLink.click();
   }
 
-  async showSearchResults() {
-    const table = this.page.locator('#ctl00_MedtrackContentPlaceHolder_gdvSearchResult');
-    await table.waitFor({ state: 'visible', timeout: 10000 });
-
-    if (await table.isVisible()) {
-      console.log('Table Exist!');
-    } else {
-      console.log('Table does not exist!');
-
-      const errorMsg = this.page.locator("//div[@class='ErrorBg']");
-      const infoMsg = this.page.locator("//div[@class='InformationBg']");
-
-      if (await errorMsg.isVisible()) {
-        console.log('Notification message: ' + await errorMsg.textContent());
-      } else if (await infoMsg.isVisible()) {
-        console.log('Notification message: ' + await infoMsg.textContent());
-      }
-    }
-  }
-
   async verifyRecordExists(lastName: string, gin: string) {
     const table = this.page.locator('#ctl00_MedtrackContentPlaceHolder_gdvSearchResult');
     const resultRow = table
       .getByRole('row')
       .filter({ hasText: lastName })
       .filter({ hasText: gin });
+    await expect(resultRow).toHaveCount(1);
     await expect(resultRow).toBeVisible();
+  }
+
+  async verifyCertificateExpiryDateColumn() {
+    const table = this.page.locator('#ctl00_MedtrackContentPlaceHolder_gdvSearchResult');
+    await expect(table.getByRole('columnheader', { name: 'Certificate Expiry Date', exact: true })).toBeVisible();
   }
 
   async verifyNoMatchingResults() {
@@ -142,7 +126,6 @@ export class SearchEmployeePage {
   }
   async clickRadioButton() {
     await this.radioButton.scrollIntoViewIfNeeded();
-    console.log('** Scrolled down to element **');
     await this.radioButton.click();
   }
 
@@ -150,15 +133,4 @@ export class SearchEmployeePage {
     await this.viewExamButton.click();
   }
 
-  async isMySearchPageExists(): Promise<boolean> {
-    try {
-      await this.pageHeading.waitFor({ state: 'visible', timeout: 5000 });
-      const isVisible = await this.pageHeading.isVisible();
-      // log(`My Search Employee page heading visibility: ${isVisible}`);
-      return isVisible;
-    } catch (error) {
-      console.log(`Error checking My Search Employee page heading visibility: ${error}`);
-      return false;
-    }
-  }
 }

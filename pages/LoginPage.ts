@@ -1,36 +1,40 @@
 import { Page, Locator, expect } from '@playwright/test';
-import { log } from 'node:console';
 
 export class LoginPage {
-
     private readonly page: Page;
-    //locators
     private readonly username: Locator;
     private readonly password: Locator;
-    private readonly capchaText: Locator;
-    private readonly capchaInputField: Locator;
+    private readonly captchaText: Locator;
+    private readonly captchaInput: Locator;
     private readonly loginSubmit: Locator;
     private readonly logout: Locator;
-    private readonly txtErrorMessage: Locator;
+    private readonly errorMessage: Locator;
+    private readonly forgotPasswordLink: Locator;
 
     constructor(page: Page) {
         this.page = page;
 
         this.username = page.locator('#ctl00_MedtrackContentPlaceHolder_UserName');
         this.password = page.locator('#ctl00_MedtrackContentPlaceHolder_Password');
-        this.capchaText = page.locator('#captchaText');
-        this.capchaInputField = page.locator('#captchaInput');
+        this.captchaText = page.locator('#captchaText');
+        this.captchaInput = page.locator('#captchaInput');
         this.loginSubmit = page.locator('#ctl00_MedtrackContentPlaceHolder_bLogin');
         this.logout = page.locator('#ctl00_loginView_btnLogout');
-        this.txtErrorMessage = page.locator("//div[@class='ErrorBg']");
+        this.errorMessage = page.locator("//div[@class='ErrorBg']");
+        this.forgotPasswordLink = page.getByRole('link', { name: /forgot.*password.*unlock/i });
     }
 
     async goto() {
-        await this.page.goto('/');
-        await expect(this.username).toBeVisible();
+        await this.page.goto('/', {
+        waitUntil: 'domcontentloaded',
+        timeout: 60000
+    });
+
+    await expect(this.username).toBeVisible({
+        timeout: 30000
+    });
     }
 
-    //action methods
     async setUsername(username: string) {
         await this.username.fill(username);
     }
@@ -38,8 +42,9 @@ export class LoginPage {
     async setPassword(password: string) {
         await this.password.fill(password);
     }
-    async setCapcha() {
-        const captchaText = await this.capchaText.textContent();
+
+    async setCaptcha() {
+        const captchaText = await this.captchaText.textContent();
         const numbers = captchaText?.match(/\d+/g);
 
         if (!numbers || numbers.length < 2) {
@@ -47,13 +52,26 @@ export class LoginPage {
         }
 
         const answer = Number(numbers[0]) + Number(numbers[1]);
-        await this.capchaInputField.click();
-        await this.capchaInputField.pressSequentially(String(answer));
-        await this.capchaInputField.press('Tab');
+        await this.captchaInput.click();
+        await this.captchaInput.pressSequentially(String(answer));
+        await this.captchaInput.press('Tab');
     }
+
     async clickLogin() {
-        await this.page.locator('body').click();
         await this.loginSubmit.click();
+    }
+
+    async clearCredentials() {
+        await this.username.fill('');
+        await this.password.fill('');
+    }
+
+    async verifyLoginButtonEnabled() {
+        await expect(this.loginSubmit).toBeEnabled();
+    }
+
+    async clickForgotPassword() {
+        await this.forgotPasswordLink.click();
     }
 
     async loginWithEnvCredentials() {
@@ -66,7 +84,7 @@ export class LoginPage {
 
         await this.setUsername(username);
         await this.setPassword(password);
-        await this.setCapcha();
+        await this.setCaptcha();
         await this.clickLogin();
         await this.verifyLoginSuccess();
     }
@@ -75,17 +93,12 @@ export class LoginPage {
         await expect(this.page).toHaveTitle(/Search Employee/i);
     }
 
-    async getloginErrorMessage() {
-        const errorMessage = await this.txtErrorMessage.textContent();
-        log(`Error message is: ${errorMessage}`);
-        if (!errorMessage) {
-            throw new Error('No login error message was displayed.');
-        }
-        return errorMessage.trim();
+    async verifyLoginErrorMessage(message: string) {
+        await expect(this.errorMessage).toHaveText(message);
     }
+
     async clickLogout() {
         await this.logout.click();
     }
-
 
 }

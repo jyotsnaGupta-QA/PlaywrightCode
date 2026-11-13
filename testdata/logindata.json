@@ -1,14 +1,29 @@
 [
-    {
-        "testName": "Valid login",
-        "username": "JyotsnaGupta",
-        "password": "ISOS@Dollar123",
-        "expectedResult": "success"
-    },
-    {
-        "testName": "Invalid password",
-        "username": "JyotsnaGupta",
-        "password": "wrongpassword",
-        "expectedResult": "failure"
-    }
+  {
+    "testRailCaseId": "C8928020",
+    "testName": "Valid account with invalid password",
+    "scenario": "invalidPassword",
+    "requiresExplicitOptIn": true
+  },
+  {
+    "testRailCaseId": "C8928021",
+    "testName": "Submit login with blank fields",
+    "scenario": "blankFields"
+  },
+  {
+    "testRailCaseId": "C8928022",
+    "testName": "Navigate through Forgot Password link",
+    "scenario": "forgotPassword"
+  },
+  {
+    "testRailCaseId": "C8928023",
+    "testName": "Invalid synthetic credentials",
+    "scenario": "invalidCredentials",
+    "requiresExplicitOptIn": true
+  },
+  {
+    "testRailCaseId": "C8928025",
+    "testName": "Forgot Password link opens recovery page",
+    "scenario": "forgotPassword"
+  }
 ]

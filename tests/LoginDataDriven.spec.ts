@@ -1,34 +1,50 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+import { randomUUID } from 'node:crypto';
 import { LoginPage } from '../pages/LoginPage';
-import { SearchEmployeePage } from '../pages/SearchEmployeePage';
 import { DataProvider } from '../utils/dataProvider';
 
+test.use({ storageState: { cookies: [], origins: [] } });
 
-//Load JSON test data logindata.json
+type LoginScenario = {
+    testRailCaseId: string;
+    testName: string;
+    scenario: 'blankFields' | 'forgotPassword' | 'invalidPassword' | 'invalidCredentials';
+    requiresExplicitOptIn?: boolean;
+};
 
-const jsonPath = "testdata/logindata.json";
-const jsonTestData = DataProvider.getTestDataFromJson(jsonPath);
+const jsonTestData: LoginScenario[] = DataProvider.getTestDataFromJson('testdata/logindata.json');
 
 for (const data of jsonTestData) {
-    test(`Login Test with JSON Data: ${data.testName} @sanity`, async ({ page }) => {
+    test(`${data.testRailCaseId} - ${data.testName} @sanity`, async ({ page }) => {
+        if (data.requiresExplicitOptIn && process.env.ENABLE_AUTH_FAILURE_TESTS !== 'true') {
+            test.skip(true, 'Authentication failure tests require an isolated test account and explicit opt-in.');
+        }
+
         const loginPage = new LoginPage(page);
-        await loginPage.goto();   // getting appURL from test.config.ts file
+        await loginPage.goto();
 
-        await loginPage.setUsername(data.username);
-        await loginPage.setPassword(data.password);
-        await loginPage.setCapcha();
-        await loginPage.clickLogin();
+        if (data.scenario === 'blankFields') {
+            await loginPage.clearCredentials();
+            await loginPage.setCaptcha();
+            await loginPage.verifyLoginButtonEnabled();
+            await loginPage.clickLogin();
+        } else if (data.scenario === 'forgotPassword') {
+            await loginPage.clickForgotPassword();
+            await expect(page).toHaveURL(/forgot|unlock/i);
+        } else {
+            const username = data.scenario === 'invalidCredentials'
+                ? `invalid-${randomUUID()}@example.invalid`
+                : process.env.MEDTRACK_NEGATIVE_USERNAME;
+            if (!username) {
+                throw new Error('Set MEDTRACK_NEGATIVE_USERNAME to an isolated non-production test account.');
+            }
 
-        if (data.expectedResult.toLowerCase() === 'success') {
-            const searchEmpPage = new SearchEmployeePage(page);
-            const isLoggedIn = await searchEmpPage.isMySearchPageExists();
-            expect(isLoggedIn).toBeTruthy();
-
+            const password = `Invalid-${randomUUID()}`;
+            await loginPage.setUsername(username);
+            await loginPage.setPassword(password);
+            await loginPage.setCaptcha();
+            await loginPage.clickLogin();
+            await loginPage.verifyLoginErrorMessage('Your user name or password is incorrect. Please try again.');
         }
-        else {
-            const errorMessage = await loginPage.getloginErrorMessage();
-            expect(errorMessage).toBe('Your user name or password is incorrect. Please try again.');
-        }
-    })
-
+    });
 }
