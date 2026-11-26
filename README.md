@@ -7,6 +7,12 @@ and a basic application response check.
 The application and TestRail are external systems. UI tests need a reachable
 GoCare environment and a permitted test account.
 
+## Guarded GoCare UAT suite
+
+`npm run test:gocare:smoke` runs the guarded Smoke cases. `npm run test:gocare` runs the guarded GoCare suite. Use `-- --project public` with the full command for the signed-out cases only. The saved-session project uses the existing authorized `playwright/.auth/user.json` state and has no login setup dependency.
+
+The guarded suite uses headed Chrome. Its fixture blocks mutations and allows only the exact verified read or draft navigation actions needed by a case. TestRail case IDs and tags come from the case mappings. Execution is local. See the [autopilot checkpoint](reports/gocare-testrail-master-progress.md#standing-gocare-autopilot-checkpoint).
+
 ## Architecture
 
 ```mermaid
@@ -136,6 +142,9 @@ npx playwright test --project=chromium --retries=0
 # Run a single named test
 npx playwright test tests/searchEmployee.spec.ts --grep "C8927857" --project=chromium
 
+# Run the gated employee create/search test only (uses saved auth; no setup/CAPTCHA)
+$env:ENABLE_EMPLOYEE_CREATION_TEST='true'; $env:MEDTRACK_NOTIFICATION_SINK_CONFIRMED='true'; npx playwright test tests/EmployeeCreationAndSearch.spec.ts --project=chromium --workers=1 --retries=0 --no-deps
+
 # Open the latest Playwright HTML report
 npx playwright show-report
 ```
@@ -172,6 +181,7 @@ configure that mapping before expecting authenticated CI tests to run.
 | `tests/auth.setup.ts` | Login and save browser state to the ignored `playwright/.auth` directory. |
 | `tests/LoginDataDriven.spec.ts` | C8928020/C8928023 failure cases are opt-in; C8928021 blank fields and C8928022/C8928025 recovery-page navigation. |
 | `tests/searchEmployee.spec.ts` | C8927857/C8927858, C9404218, C15239052, and C15239309. Search criteria are synthetic or reference a pre-seeded test record. |
+| `tests/EmployeeCreationAndSearch.spec.ts` | C8927852/C8927857 create a unique synthetic employee and verify its creation and search result; it never deletes the record. |
 | `tests/CreateEmployee.spec.ts` | C8927852 synthetic form preparation is non-submitting; persistent C8927852/C8927853 tests are skipped unless explicitly enabled. |
 | `tests/searchVaccination.spec.ts` | C8935292/C8935293/C15237380 read-only search and validation cases. |
 | `tests/navigation.spec.ts` | C15239053 My Details and C15239310 Change Password page navigation; no form submission. |
@@ -220,6 +230,12 @@ created, modified, or deleted. WebKit was not run.
 - `testdata/create-emp-data.json` contains non-personal form defaults.
   `CreateEmployee.spec.ts` generates unique synthetic names, GIN values, and
   email addresses under the reserved `example.invalid` domain at runtime.
+- `EmployeeCreationAndSearch.spec.ts` is gated by
+  `ENABLE_EMPLOYEE_CREATION_TEST=true` and
+  `MEDTRACK_NOTIFICATION_SINK_CONFIRMED=true`. It creates a persistent
+  synthetic employee in UAT and intentionally leaves it for manual deletion.
+  The notification flag is an operator attestation only; the application’s
+  email/SMS routing is not technically verified by the test.
 - `testdata/employee-search.json` points to the pre-seeded record used by
   positive employee and vaccination searches. Confirm it is dedicated
   non-production test data before running against another tenant.

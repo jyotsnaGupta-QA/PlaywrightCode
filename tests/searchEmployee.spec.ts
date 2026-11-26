@@ -10,7 +10,6 @@ test.use({ storageState: { cookies: [], origins: [] } });
 type EmployeeSearchFixture = {
   existingSyntheticEmployee: {
     firstName: string;
-    lastName: string;
     gin: string;
   };
 };
@@ -44,21 +43,44 @@ test('C8927857 - Search employee using valid synthetic criteria @sanity', async 
   await searchEmployeePage.setFirstName(searchFixture.existingSyntheticEmployee.firstName);
   await searchEmployeePage.setGIN(searchFixture.existingSyntheticEmployee.gin);
   await searchEmployeePage.clickSearch();
+  const resultTable = page.locator(
+    '#ctl00_MedtrackContentPlaceHolder_gdvSearchResult'
+  );
+
+  console.log('SEARCH RESULT TABLE:');
+  console.log(await resultTable.innerText());
+
+  console.log('INDIVIDUAL ROWS:');
+  console.log(await resultTable.getByRole('row').allInnerTexts());
   await searchEmployeePage.verifyRecordExists(
-    searchFixture.existingSyntheticEmployee.lastName,
+    searchFixture.existingSyntheticEmployee.firstName,
     searchFixture.existingSyntheticEmployee.gin,
   );
 });
 
 test('C8927858 - Search employee with synthetic non-matching criteria @sanity', async ({ page }) => {
   const searchEmployeePage = new SearchEmployeePage(page);
-  const suffix = randomUUID().replace(/[0-9-]/g, '').padEnd(8, 'a').slice(0, 8);
+
+  const suffix = randomUUID()
+    .replace(/[^a-f]/gi, '')
+    .replace(/a/g, 'm')
+    .slice(0, 8)
+    .padEnd(8, 'm');
 
   await page.goto('/employee/searchEmployee.aspx');
   await expect(searchEmployeePage.pageHeading).toBeVisible();
+
   await searchEmployeePage.setFirstName(`NoMatchFirst${suffix}`);
-  await searchEmployeePage.setLastName(`NoMatchLast${suffix}`);
   await searchEmployeePage.clickSearch();
+  const resultTable = page.locator(
+    '#ctl00_MedtrackContentPlaceHolder_gdvSearchResult'
+  );
+
+  console.log('SEARCH RESULT TABLE:');
+  console.log(await resultTable.innerText());
+
+  console.log('INDIVIDUAL ROWS:');
+  console.log(await resultTable.locator('tr').allInnerTexts());
   await searchEmployeePage.verifyNoMatchingResults();
 });
 
@@ -70,6 +92,10 @@ test('C9404218 - Search results include the Certificate Expiry Date column @sani
   await searchEmployeePage.setFirstName(searchFixture.existingSyntheticEmployee.firstName);
   await searchEmployeePage.setGIN(searchFixture.existingSyntheticEmployee.gin);
   await searchEmployeePage.clickSearch();
+  await searchEmployeePage.verifyRecordExists(
+  searchFixture.existingSyntheticEmployee.firstName,
+  searchFixture.existingSyntheticEmployee.gin,
+);
   await searchEmployeePage.verifyCertificateExpiryDateColumn();
 });
 

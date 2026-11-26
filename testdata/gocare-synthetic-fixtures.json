@@ -1,0 +1,1028 @@
+{
+  "suite": {
+    "projectId": 73,
+    "suiteId": 26097
+  },
+  "decision": "MY COMPANY and GIN 97101 are approved for the first synthetic employee in GoCare UAT. Creation remains subject to the final exact identifier check and verified notification routing to the approved recipient only.",
+  "proposedCompany": "GoCare QA Atlas",
+  "authorizedProvisioning": {
+    "company": {
+      "displayName": "MY COMPANY",
+      "id": 129
+    },
+    "firstRecord": {
+      "type": "Employee",
+      "status": "Active",
+      "title": "Mr",
+      "firstName": "Aster",
+      "lastName": "QAfixture",
+      "gender": "Male",
+      "dateOfBirth": "1982-02-12",
+      "relation": "Employee",
+      "gin": "97101",
+      "primaryEmail": null
+    },
+    "identifierCheck": "GIN 97101 passed client validation and exact searches found no match in MY COMPANY or with Company unfiltered in the role-visible directory. Recheck immediately before submission.",
+    "primaryEmailHandling": "Use the address from the original approval. Employee-create notifications to that address are allowed. Verify the workflow cannot deliver or queue notifications to any other recipient.",
+    "remainingGates": [
+      "Repeat the exact searches for approved GIN 97101 in company ID 129 and with Company unfiltered immediately before Submit. If the visible directory is insufficient to establish uniqueness, obtain authorized wider verification or reservation.",
+      "Verify that Create Employee for company ID 129 cannot deliver or queue notifications to recipients other than the approved address.",
+      "Verify each dependent creation independently for outbound effects and parent-record writes."
+    ],
+    "historicalPlan": "The GoCare QA Atlas companies and records below are references for case dependencies. They are not in the current provisioning sequence."
+  },
+  "reservedAbsentValues": {
+    "gin": "99999",
+    "username": "gocare.qa.atlas.absent"
+  },
+  "fixtureDateAnchor": "2026-11-25",
+  "requirementsBeforeProvisioning": [
+    "UAT host and MY COMPANY approved. Use existing company configuration and the available authorized role.",
+    "Confirm test identifier ranges and uniqueness, tenant option codes, required fields and valid exam/vaccination status values.",
+    "Provide secure role/account provisioning and a real isolated mail sink. The example.invalid values are placeholders only.",
+    "Apply only approved synthetic creates that do not change existing records or trigger external notifications. Save approved creation evidence and IDs. Further edit or cleanup requires separate authorization.",
+    "Confirm date windows relative to execution and the ERAMET age-45 and validity rules before running those cases."
+  ],
+  "families": [
+    {
+      "key": "company",
+      "name": "Isolated company configuration",
+      "dependsOn": [],
+      "blockedCaseIds": [
+        8934359,
+        8934361,
+        8934362
+      ]
+    },
+    {
+      "key": "accounts",
+      "name": "Disposable web accounts",
+      "dependsOn": [
+        "company"
+      ],
+      "blockedCaseIds": [
+        15239053,
+        15239321,
+        15239322,
+        15239580,
+        15239581,
+        15239312,
+        15239313,
+        15239314,
+        15239315,
+        15239316,
+        8935291,
+        8934306,
+        8934307,
+        8928019,
+        8928020,
+        8928023,
+        8928026,
+        8928027,
+        8928028,
+        8934316,
+        9404079,
+        9404080,
+        9404081,
+        9430419,
+        9430421,
+        9430422,
+        9430423,
+        9430424
+      ]
+    },
+    {
+      "key": "roles",
+      "name": "Role entitlement accounts",
+      "dependsOn": [
+        "company",
+        "accounts"
+      ],
+      "blockedCaseIds": [
+        9404214,
+        8935483,
+        8935484,
+        8935485,
+        8935486,
+        8935487,
+        8935488,
+        8935490
+      ]
+    },
+    {
+      "key": "employees",
+      "name": "Synthetic employee profiles",
+      "dependsOn": [
+        "company",
+        "accounts"
+      ],
+      "blockedCaseIds": [
+        8927857,
+        9404218,
+        15239582,
+        8927852,
+        8928138,
+        8928137,
+        8932676,
+        8927385,
+        8932729,
+        8928136,
+        8934323,
+        8934326
+      ]
+    },
+    {
+      "key": "clinical",
+      "name": "Employee-linked clinical records",
+      "dependsOn": [
+        "company",
+        "employees",
+        "roles"
+      ],
+      "blockedCaseIds": [
+        8927855,
+        8927856,
+        8934317,
+        8927386,
+        8932730,
+        8927533,
+        8932732,
+        8927534,
+        8932734,
+        8932739,
+        8932744,
+        8934318,
+        8934319,
+        8934320,
+        8934321,
+        8927485,
+        8932731
+      ]
+    },
+    {
+      "key": "eramet",
+      "name": "ERAMET synthetic configuration",
+      "dependsOn": [
+        "company",
+        "employees",
+        "clinical"
+      ],
+      "blockedCaseIds": [
+        9428818,
+        9428819,
+        9428821,
+        9428822,
+        9428823,
+        9428824,
+        9428825,
+        9428826,
+        9428827
+      ]
+    },
+    {
+      "key": "notifications",
+      "name": "Isolated message and notification sink",
+      "dependsOn": [
+        "company",
+        "accounts",
+        "employees",
+        "clinical"
+      ],
+      "blockedCaseIds": [
+        8934322,
+        8934324,
+        8934325,
+        9430379,
+        9430380,
+        9430381,
+        9430382,
+        9430383,
+        9430384,
+        9430385,
+        9430386,
+        9430387
+      ]
+    },
+    {
+      "key": "outputs",
+      "name": "Synthetic document and output scope",
+      "dependsOn": [
+        "company",
+        "employees",
+        "clinical"
+      ],
+      "blockedCaseIds": [
+        8933427
+      ]
+    },
+    {
+      "key": "maintenance",
+      "name": "Sanitized logs and disposable services",
+      "dependsOn": [
+        "company",
+        "roles"
+      ],
+      "blockedCaseIds": [
+        8935282,
+        8935283,
+        8935284,
+        8935287,
+        8935290
+      ]
+    }
+  ],
+  "records": [
+    {
+      "key": "company",
+      "family": "company",
+      "label": "GoCare QA Atlas",
+      "dependsOn": [],
+      "fields": {
+        "companyName": "GoCare QA Atlas",
+        "status": "Active",
+        "purpose": "Synthetic-only company for shared fixtures"
+      }
+    },
+    {
+      "key": "company-clone",
+      "family": "company",
+      "label": "GoCare QA Atlas Scratch",
+      "dependsOn": [
+        "company"
+      ],
+      "fields": {
+        "companyName": "GoCare QA Atlas Scratch",
+        "status": "Inactive",
+        "purpose": "Disposable editable configuration and isolation checks"
+      }
+    },
+    {
+      "key": "company-create-candidate",
+      "family": "company",
+      "label": "GoCare QA Atlas Candidate",
+      "dependsOn": [
+        "company"
+      ],
+      "fields": {
+        "companyName": "GoCare QA Atlas Candidate",
+        "status": "Active",
+        "keepAbsentUntilCase": "C8934359"
+      }
+    },
+    {
+      "key": "lookups",
+      "family": "company",
+      "label": "Atlas QA lookups",
+      "dependsOn": [
+        "company"
+      ],
+      "fields": {
+        "ownerCompany": "GoCare QA Atlas",
+        "area": "QA Atlas Area",
+        "jobSite": "QA Atlas Site",
+        "geoMarket": "QA Atlas Market",
+        "employeeCategory": "QA Atlas Category",
+        "medicalCenter": "QA Atlas Clinic",
+        "medicalExamType": "QA Atlas Exam",
+        "teamRoleMapping": "Confirm enabled tenant role choices"
+      }
+    },
+    {
+      "key": "test-sink",
+      "family": "notifications",
+      "label": "Atlas QA mail sink",
+      "dependsOn": [
+        "company"
+      ],
+      "fields": {
+        "routing": "Operator must supply isolated sink. Outbound delivery stays disabled during provisioning.",
+        "syntheticRecipientExample": "atlas.qa@example.invalid"
+      }
+    },
+    {
+      "key": "account-reader",
+      "family": "accounts",
+      "label": "Atlas QA reader",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "username": "gocare.qa.atlas.reader",
+        "state": "Enabled",
+        "ownerCompany": "GoCare QA Atlas",
+        "email": "gocare.qa.atlas.reader@example.invalid",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "account-locked",
+      "family": "accounts",
+      "label": "Atlas QA locked",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "username": "gocare.qa.atlas.locked",
+        "state": "Locked",
+        "ownerCompany": "GoCare QA Atlas",
+        "email": "gocare.qa.atlas.locked@example.invalid",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "account-password",
+      "family": "accounts",
+      "label": "Atlas QA password",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "username": "gocare.qa.atlas.password",
+        "state": "Enabled",
+        "ownerCompany": "GoCare QA Atlas",
+        "email": "gocare.qa.atlas.password@example.invalid",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "account-recovery",
+      "family": "accounts",
+      "label": "Atlas QA recovery",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "username": "gocare.qa.atlas.recovery",
+        "state": "Enabled",
+        "ownerCompany": "GoCare QA Atlas",
+        "email": "gocare.qa.atlas.recovery@example.invalid",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "account-team",
+      "family": "accounts",
+      "label": "Atlas QA team",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "username": "gocare.qa.atlas.team",
+        "state": "Enabled",
+        "ownerCompany": "GoCare QA Atlas",
+        "email": "gocare.qa.atlas.team@example.invalid",
+        "credential": "Provision securely outside this plan.",
+        "firstName": "Alder",
+        "lastName": "QAfixture",
+        "title": "Mr",
+        "gender": "Male",
+        "proposedRole": "Recruiter"
+      }
+    },
+    {
+      "key": "account-team-candidate",
+      "family": "accounts",
+      "label": "Atlas QA Team Candidate",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "username": "gocare.qa.atlas.teamcandidate",
+        "state": "Enabled",
+        "ownerCompany": "GoCare QA Atlas",
+        "email": "gocare.qa.atlas.teamcandidate@example.invalid",
+        "credential": "Provision securely outside this plan.",
+        "firstName": "Aspen",
+        "lastName": "QAfixture",
+        "title": "Mr",
+        "gender": "Male",
+        "proposedRole": "Recruiter",
+        "keepAbsentUntilCase": "C8928068"
+      }
+    },
+    {
+      "key": "role-isos-admin",
+      "family": "roles",
+      "label": "Atlas QA ISOS Admin",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "role": "ISOS Admin",
+        "username": "gocare.qa.atlas.isos-admin",
+        "state": "Enabled",
+        "company": "GoCare QA Atlas",
+        "entitlements": "Confirm with role owner",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "role-isos-user",
+      "family": "roles",
+      "label": "Atlas QA ISOS User",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "role": "ISOS User",
+        "username": "gocare.qa.atlas.isos-user",
+        "state": "Enabled",
+        "company": "GoCare QA Atlas",
+        "entitlements": "Confirm with role owner",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "role-chief-recruiter",
+      "family": "roles",
+      "label": "Atlas QA Chief Recruiter",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "role": "Chief Recruiter",
+        "username": "gocare.qa.atlas.chief-recruiter",
+        "state": "Enabled",
+        "company": "GoCare QA Atlas",
+        "entitlements": "Confirm with role owner",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "role-recruiter",
+      "family": "roles",
+      "label": "Atlas QA Recruiter",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "role": "Recruiter",
+        "username": "gocare.qa.atlas.recruiter",
+        "state": "Enabled",
+        "company": "GoCare QA Atlas",
+        "entitlements": "Confirm with role owner",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "role-isos-reviewer",
+      "family": "roles",
+      "label": "Atlas QA ISOS Reviewer",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "role": "ISOS Reviewer",
+        "username": "gocare.qa.atlas.isos-reviewer",
+        "state": "Enabled",
+        "company": "GoCare QA Atlas",
+        "entitlements": "Confirm with role owner",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "role-client-reviewer",
+      "family": "roles",
+      "label": "Atlas QA Client Reviewer",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "role": "Client Reviewer",
+        "username": "gocare.qa.atlas.client-reviewer",
+        "state": "Enabled",
+        "company": "GoCare QA Atlas",
+        "entitlements": "Confirm with role owner",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "role-partner",
+      "family": "roles",
+      "label": "Atlas QA Partner",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "role": "Partner",
+        "username": "gocare.qa.atlas.partner",
+        "state": "Enabled",
+        "company": "GoCare QA Atlas",
+        "entitlements": "Confirm with role owner",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "role-maintenance",
+      "family": "roles",
+      "label": "Atlas QA Maintenance Operator",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "role": "Maintenance role confirmed by service owner",
+        "username": "gocare.qa.atlas.maintenance",
+        "state": "Enabled",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "role-slb-restricted",
+      "family": "roles",
+      "label": "Atlas QA Restricted Exam Reviewer",
+      "dependsOn": [
+        "company",
+        "test-sink"
+      ],
+      "fields": {
+        "role": "Confirm exact restricted SLB role for C9404214",
+        "username": "gocare.qa.atlas.restricted",
+        "state": "Enabled",
+        "credential": "Provision securely outside this plan."
+      }
+    },
+    {
+      "key": "employee-no-exam",
+      "family": "employees",
+      "label": "Atlas QA Aster",
+      "dependsOn": [
+        "company",
+        "lookups",
+        "test-sink"
+      ],
+      "fields": {
+        "firstName": "Aster",
+        "lastName": "QAfixture",
+        "status": "Active",
+        "title": "Mr",
+        "gender": "Male",
+        "relation": "Employee",
+        "company": "GoCare QA Atlas",
+        "dateOfBirth": "1982-02-12",
+        "proposedIdentifier": "97101",
+        "identifierType": "GIN",
+        "primaryEmail": "qa.atlas.aster@example.invalid",
+        "plannedRelationships": [],
+        "maritalStatus": "Single"
+      }
+    },
+    {
+      "key": "employee-processing",
+      "family": "employees",
+      "label": "Atlas QA Birch",
+      "dependsOn": [
+        "company",
+        "lookups",
+        "test-sink"
+      ],
+      "fields": {
+        "firstName": "Birch",
+        "lastName": "QAfixture",
+        "status": "Active",
+        "title": "Mr",
+        "gender": "Male",
+        "relation": "Employee",
+        "company": "GoCare QA Atlas",
+        "dateOfBirth": "1982-05-18",
+        "proposedIdentifier": "97102",
+        "identifierType": "GIN",
+        "primaryEmail": "qa.atlas.birch@example.invalid",
+        "plannedRelationships": [
+          "exam-process"
+        ],
+        "maritalStatus": "Single"
+      }
+    },
+    {
+      "key": "employee-reviewed",
+      "family": "employees",
+      "label": "Atlas QA Cedar",
+      "dependsOn": [
+        "company",
+        "lookups",
+        "test-sink"
+      ],
+      "fields": {
+        "firstName": "Cedar",
+        "lastName": "QAfixture",
+        "status": "Active",
+        "title": "Mr",
+        "gender": "Female",
+        "relation": "Employee",
+        "company": "GoCare QA Atlas",
+        "dateOfBirth": "1980-09-23",
+        "proposedIdentifier": "97103",
+        "identifierType": "GIN",
+        "primaryEmail": "qa.atlas.cedar@example.invalid",
+        "certificateExpiry": "2026-12-15",
+        "dependent": "Atlas QA Rowan",
+        "dashboard": "Use synthetic, non-identifying health summary only.",
+        "plannedRelationships": [
+          "exam-reviewed",
+          "vaccination"
+        ],
+        "maritalStatus": "Single"
+      }
+    },
+    {
+      "key": "employee-inactive",
+      "family": "employees",
+      "label": "Atlas QA Dune",
+      "dependsOn": [
+        "company",
+        "lookups",
+        "test-sink"
+      ],
+      "fields": {
+        "firstName": "Dune",
+        "lastName": "QAfixture",
+        "status": "Inactive",
+        "title": "Mr",
+        "gender": "Male",
+        "relation": "Employee",
+        "company": "GoCare QA Atlas",
+        "dateOfBirth": "1980-03-14",
+        "proposedIdentifier": "97104",
+        "identifierType": "GIN",
+        "primaryEmail": "qa.atlas.dune@example.invalid",
+        "plannedRelationships": [],
+        "maritalStatus": "Single"
+      }
+    },
+    {
+      "key": "employee-delete-clone",
+      "family": "employees",
+      "label": "Atlas QA Elm",
+      "dependsOn": [
+        "company",
+        "lookups",
+        "test-sink"
+      ],
+      "fields": {
+        "firstName": "Elm",
+        "lastName": "QAfixture",
+        "status": "Active",
+        "title": "Mr",
+        "gender": "Male",
+        "relation": "Employee",
+        "company": "GoCare QA Atlas",
+        "dateOfBirth": "1981-10-03",
+        "proposedIdentifier": "97105",
+        "identifierType": "GIN",
+        "primaryEmail": "qa.atlas.elm@example.invalid",
+        "plannedRelationships": [],
+        "maritalStatus": "Single"
+      }
+    },
+    {
+      "key": "employee-no-eligible-met",
+      "family": "employees",
+      "label": "Atlas QA Fir",
+      "dependsOn": [
+        "company",
+        "lookups",
+        "test-sink"
+      ],
+      "fields": {
+        "firstName": "Fir",
+        "lastName": "QAfixture",
+        "status": "Active",
+        "title": "Mr",
+        "gender": "Male",
+        "relation": "Employee",
+        "company": "GoCare QA Atlas",
+        "dateOfBirth": "1982-04-03",
+        "proposedIdentifier": "97106",
+        "identifierType": "GIN",
+        "primaryEmail": "qa.atlas.fir@example.invalid",
+        "plannedRelationships": [],
+        "maritalStatus": "Single"
+      }
+    },
+    {
+      "key": "employee-exam-destructive-clone",
+      "family": "employees",
+      "label": "Atlas QA Grove",
+      "dependsOn": [
+        "company",
+        "lookups",
+        "test-sink"
+      ],
+      "fields": {
+        "firstName": "Grove",
+        "lastName": "QAfixture",
+        "status": "Active",
+        "title": "Mr",
+        "gender": "Male",
+        "relation": "Employee",
+        "company": "GoCare QA Atlas",
+        "dateOfBirth": "1980-07-15",
+        "proposedIdentifier": "97107",
+        "identifierType": "GIN",
+        "primaryEmail": "qa.atlas.grove@example.invalid",
+        "plannedRelationships": [
+          "exam-destructive-clone"
+        ],
+        "maritalStatus": "Single"
+      }
+    },
+    {
+      "key": "employee-create-candidate",
+      "family": "employees",
+      "label": "Atlas QA Larch",
+      "dependsOn": [
+        "company",
+        "lookups",
+        "test-sink"
+      ],
+      "fields": {
+        "firstName": "Larch",
+        "lastName": "QAfixture",
+        "status": "Active",
+        "title": "Mr",
+        "gender": "Male",
+        "relation": "Employee",
+        "company": "GoCare QA Atlas",
+        "dateOfBirth": "1982-11-19",
+        "proposedIdentifier": "97108",
+        "identifierType": "GIN",
+        "primaryEmail": "qa.atlas.larch@example.invalid",
+        "keepAbsentUntilCase": "C8927852",
+        "plannedRelationships": [],
+        "maritalStatus": "Single"
+      }
+    },
+    {
+      "key": "employee-pre-employee",
+      "family": "employees",
+      "label": "Atlas QA Hazel",
+      "dependsOn": [
+        "company",
+        "lookups",
+        "test-sink"
+      ],
+      "fields": {
+        "firstName": "Hazel",
+        "lastName": "QAfixture",
+        "status": "Pre-employee",
+        "title": "Mr",
+        "gender": "Male",
+        "relation": "Employee",
+        "company": "GoCare QA Atlas",
+        "dateOfBirth": "1984-06-14",
+        "proposedIdentifier": "97109",
+        "identifierType": "Applicant ID",
+        "primaryEmail": "qa.atlas.hazel@example.invalid",
+        "plannedRelationships": [],
+        "maritalStatus": "Single"
+      }
+    },
+    {
+      "key": "employee-active-exam",
+      "family": "employees",
+      "label": "Atlas QA Linden",
+      "dependsOn": [
+        "company",
+        "lookups",
+        "test-sink"
+      ],
+      "fields": {
+        "firstName": "Linden",
+        "lastName": "QAfixture",
+        "status": "Active",
+        "title": "Mr",
+        "gender": "Male",
+        "relation": "Employee",
+        "company": "GoCare QA Atlas",
+        "dateOfBirth": "1980-10-12",
+        "proposedIdentifier": "97110",
+        "identifierType": "GIN",
+        "primaryEmail": "qa.atlas.linden@example.invalid",
+        "plannedRelationships": [
+          "exam-active"
+        ],
+        "maritalStatus": "Single"
+      }
+    },
+    {
+      "key": "exam-process",
+      "family": "clinical",
+      "label": "Atlas QA Processing Exam",
+      "dependsOn": [
+        "employee-processing",
+        "lookups"
+      ],
+      "fields": {
+        "status": "Processing",
+        "medicalCenter": "QA Atlas Clinic",
+        "medicalExamType": "QA Atlas Exam",
+        "submittedDate": "2026-11-20"
+      }
+    },
+    {
+      "key": "exam-active",
+      "family": "clinical",
+      "label": "Atlas QA Active Exam",
+      "dependsOn": [
+        "employee-active-exam",
+        "lookups"
+      ],
+      "fields": {
+        "status": "Active",
+        "medicalCenter": "QA Atlas Clinic",
+        "medicalExamType": "QA Atlas Exam",
+        "expiry": "2027-01-15"
+      }
+    },
+    {
+      "key": "exam-reviewed",
+      "family": "clinical",
+      "label": "Atlas QA Reviewed Exam",
+      "dependsOn": [
+        "employee-reviewed",
+        "lookups",
+        "role-isos-reviewer"
+      ],
+      "fields": {
+        "status": "Reviewed",
+        "medicalCenter": "QA Atlas Clinic",
+        "medicalExamType": "QA Atlas Exam",
+        "reviewDate": "2026-11-20",
+        "expiry": "2026-12-15",
+        "reviewer": "gocare.qa.atlas.isos-reviewer"
+      }
+    },
+    {
+      "key": "exam-destructive-clone",
+      "family": "clinical",
+      "label": "Atlas QA Disposable Exam",
+      "dependsOn": [
+        "employee-exam-destructive-clone",
+        "lookups"
+      ],
+      "fields": {
+        "status": "Completed candidate",
+        "medicalCenter": "QA Atlas Clinic",
+        "medicalExamType": "QA Atlas Exam",
+        "expiry": "2026-12-15",
+        "document": "Atlas QA document clone",
+        "reminder": "Atlas QA disposable reminder"
+      }
+    },
+    {
+      "key": "vaccination",
+      "family": "clinical",
+      "label": "Atlas QA Vaccination",
+      "dependsOn": [
+        "employee-reviewed",
+        "lookups"
+      ],
+      "fields": {
+        "vaccinationDate": "2026-11-18",
+        "vaccineName": "Use approved test lookup",
+        "vaccineBrand": "Use approved test lookup",
+        "status": "Use approved administered status",
+        "caseIds": [
+          8935292,
+          8935293,
+          15237380
+        ]
+      }
+    },
+    {
+      "key": "eramet",
+      "family": "eramet",
+      "label": "GoCare QA Atlas ERAMET",
+      "dependsOn": [
+        "company",
+        "exam-active",
+        "employee-no-exam",
+        "employee-reviewed"
+      ],
+      "fields": {
+        "companyName": "GoCare QA Atlas ERAMET",
+        "globalMETs": [
+          "QA Atlas N1",
+          "QA Atlas N2"
+        ],
+        "validityYears": [
+          2,
+          4
+        ],
+        "ageVariants": [
+          44,
+          45,
+          46
+        ],
+        "genderVariants": [
+          "Female",
+          "Male"
+        ],
+        "namedRules": [
+          "Haute Altitude",
+          "Zone Impaludee"
+        ],
+        "stateVariants": [
+          "No exam",
+          "Active exam"
+        ],
+        "mapping": "Confirm requirement and age-45 rule before execution. Active exam is a separate fixture from the reviewed and processing variants.",
+        "companyMETs": [
+          {
+            "name": "QA Atlas ERAMET N1",
+            "candidateGlobalMET": "QA Atlas N1",
+            "documentedExamType": "Full exam"
+          },
+          {
+            "name": "QA Atlas ERAMET N2",
+            "candidateGlobalMET": "QA Atlas N2",
+            "documentedExamType": "Light exam"
+          }
+        ],
+        "ageBoundaryCandidate": {
+          "dateOfBirth": "1981-11-25",
+          "plannedState": "Reserve until the age-45 requirement is approved"
+        }
+      }
+    },
+    {
+      "key": "mail-events",
+      "family": "notifications",
+      "label": "Atlas QA Notification Events",
+      "dependsOn": [
+        "test-sink",
+        "employee-reviewed",
+        "exam-reviewed"
+      ],
+      "fields": {
+        "eventVariants": [
+          "Welcome Email",
+          "LTA",
+          "Reminder 1",
+          "Account Enabled",
+          "HVP"
+        ],
+        "recipientAlternates": [
+          "Eligible",
+          "HCC",
+          "HCR"
+        ],
+        "stateVariants": [
+          "No prior notification",
+          "Prior notification"
+        ],
+        "template": "Confirm approved content expectations and send authorization"
+      }
+    },
+    {
+      "key": "document",
+      "family": "outputs",
+      "label": "Atlas QA Reminder Document",
+      "dependsOn": [
+        "exam-reviewed"
+      ],
+      "fields": {
+        "status": "Processed",
+        "proposedFile": "Atlas-QA-reminder.pdf",
+        "coverage": [
+          "Successful retrieval",
+          "Approved sanitized error or missing result"
+        ]
+      }
+    },
+    {
+      "key": "service",
+      "family": "maintenance",
+      "label": "Atlas QA Disposable Service",
+      "dependsOn": [
+        "company",
+        "role-maintenance"
+      ],
+      "fields": {
+        "role": "Maintenance access granted by service owner",
+        "serviceBaseline": "Confirm expected status and isolated host first",
+        "logTypes": [
+          "Approved synthetic normal log",
+          "Approved synthetic error log",
+          "Guaranteed empty date range"
+        ]
+      }
+    }
+  ],
+  "registryPrefix": "QA_ATLAS_",
+  "expectedBlockedCases": 95
+}

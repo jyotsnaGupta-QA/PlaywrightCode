@@ -1,7 +1,0 @@
-[
-  'Select Employee Status',
-  'Active',
-  'Inactive',
-  'Pre-employee',
-  'Timed out'
-]

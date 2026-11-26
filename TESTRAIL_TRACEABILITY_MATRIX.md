@@ -1,12 +1,12 @@
 # TestRail Suite 26097 Traceability Matrix
 
-Project 73; suite 26097; 294 cases. Updated 2026-11-12. This matrix records local automation and execution only; no TestRail records were changed. Case titles are omitted here to avoid duplicating test-data text; use the linked case IDs for current source details.
+Project 73; suite 26097; 294 cases. Updated 2026-11-19. This matrix records local automation and execution only; no TestRail records were changed. Case titles are omitted here to avoid duplicating test-data text; use the linked case IDs for current source details.
 
 ## Execution summary
 
 - Full Chromium suite: 17 passed, 4 skipped; 21 tests discovered including the auth setup project. No WebKit run was performed.
 - TestRail cases fully passed: 14; partial form-only: 1; guarded/not run: 3; excluded by prior user choice: 1; remaining not implemented/executed: 275.
-- C8927852 was only verified through synthetic form preparation; the submit action remains gated.
+- C8927852/C8927857 have a combined synthetic create-and-search test implementation; it has not been executed and leaves the record for manual deletion.
 - C8927853 and authentication-failure cases C8928020/C8928023 remain gated. The C8928070 team-member test remains deleted per the earlier explicit choice.
 - The existing API smoke test is a read-only GET / check and has no corresponding TestRail case ID.
 
@@ -17,11 +17,11 @@ Project 73; suite 26097; 294 cases. Updated 2026-11-12. This matrix records loca
 | [C8927485](https://internationalsos.testrail.net/index.php?/cases/view/8927485) | Create dummy exam | UI candidate - state-changing; isolate data and clean up | - | Not implemented / not executed |
 | [C8927533](https://internationalsos.testrail.net/index.php?/cases/view/8927533) | Delete an Exam | UI candidate - state-changing; isolate data and clean up | - | Not implemented / not executed |
 | [C8927534](https://internationalsos.testrail.net/index.php?/cases/view/8927534) | Delete recommendation letter | UI candidate - state-changing; isolate data and clean up | - | Not implemented / not executed |
-| [C8927852](https://internationalsos.testrail.net/index.php?/cases/view/8927852) | Create New Employee | UI candidate - state-changing; isolate data and clean up | tests/CreateEmployee.spec.ts | Partial - form preparation passed; record creation not run |
+| [C8927852](https://internationalsos.testrail.net/index.php?/cases/view/8927852) | Create New Employee | UI candidate - state-changing; isolate data and clean up | tests/EmployeeCreationAndSearch.spec.ts | Implemented; not executed; manual deletion required |
 | [C8927853](https://internationalsos.testrail.net/index.php?/cases/view/8927853) | Create New Employee | UI candidate - state-changing; isolate data and clean up | tests/CreateEmployee.spec.ts | Not run - guarded pending explicit approval |
 | [C8927855](https://internationalsos.testrail.net/index.php?/cases/view/8927855) | Create Exam | UI candidate - state-changing; isolate data and clean up | - | Not implemented / not executed |
 | [C8927856](https://internationalsos.testrail.net/index.php?/cases/view/8927856) | Create Exam | UI candidate - state-changing; isolate data and clean up | - | Not implemented / not executed |
-| [C8927857](https://internationalsos.testrail.net/index.php?/cases/view/8927857) | Search employee | UI candidate | tests/searchEmployee.spec.ts | Passed - Chromium |
+| [C8927857](https://internationalsos.testrail.net/index.php?/cases/view/8927857) | Search employee | UI candidate | tests/searchEmployee.spec.ts; tests/EmployeeCreationAndSearch.spec.ts | Existing search passed; new combined test not executed |
 | [C8927858](https://internationalsos.testrail.net/index.php?/cases/view/8927858) | Search employee | UI candidate | tests/searchEmployee.spec.ts | Passed - Chromium |
 | [C8928019](https://internationalsos.testrail.net/index.php?/cases/view/8928019) | Login Page | UI candidate | tests/login.spec.ts | Passed - Chromium |
 | [C8928020](https://internationalsos.testrail.net/index.php?/cases/view/8928020) | Login Page | UI candidate | tests/LoginDataDriven.spec.ts | Not run - guarded pending explicit approval |

@@ -1,0 +1,171 @@
+{
+  "projectId": 73,
+  "suiteId": 26097,
+  "results": [
+    {
+      "id": 8927386,
+      "originalTitle": "Change status of an Exam if exam exist",
+      "approvedTitle": "Verify Exam Status Change When an Exam Exists",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    },
+    {
+      "id": 8932730,
+      "originalTitle": "Change status of an Exam if there is no exam",
+      "approvedTitle": "Verify No Exams Message When Changing Exam Status Without an Exam",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    },
+    {
+      "id": 8927485,
+      "originalTitle": "Create dummy exam if exam present for employee",
+      "approvedTitle": "Verify Dummy Exam Creation When an Exam Exists",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    },
+    {
+      "id": 8927533,
+      "originalTitle": "Delete an Exam if exam present",
+      "approvedTitle": "Verify Exam Deletion When an Exam Exists",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    },
+    {
+      "id": 8927534,
+      "originalTitle": "Delete recommendation letter if exam present",
+      "approvedTitle": "Verify Recommendation Letter Deletion When an Exam Exists",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    },
+    {
+      "id": 8932733,
+      "originalTitle": "Delete recommendation letter if there is no exam",
+      "approvedTitle": "Verify Recommendation Letter Deletion When No Exam Exists",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    },
+    {
+      "id": 8928112,
+      "originalTitle": "Delete Reminders if there is exam and reminders both are present",
+      "approvedTitle": "Verify Reminder Deletion When an Exam and Reminder Exist",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    },
+    {
+      "id": 8932739,
+      "originalTitle": "Delete reminders If there is no exam present for Existing exam or Upcoming exam",
+      "approvedTitle": "Verify No Reminder Message for Existing and Upcoming Exams",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    },
+    {
+      "id": 8932744,
+      "originalTitle": "Delete reminders If there is exam present but no reminder for Existing or Upcoming exam",
+      "approvedTitle": "Verify No Reminder Message When No Reminder Exists for an Exam",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    },
+    {
+      "id": 8934322,
+      "originalTitle": "User click on 'Send LTA' button",
+      "approvedTitle": "Verify LTA Request Submission",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    },
+    {
+      "id": 8934324,
+      "originalTitle": "If record has any previous notification",
+      "approvedTitle": "Verify Notification Resend When a Previous Notification Exists",
+      "preUpdateTitleCheck": "MATCH",
+      "updateRequest": "POST contained only title",
+      "postUpdateTitleVerification": "MATCH",
+      "contentFields": "MATCH",
+      "contentFieldMismatchNames": [],
+      "metadataChanges": [
+        "version",
+        "updated_on"
+      ],
+      "status": "VERIFIED"
+    }
+  ]
+}

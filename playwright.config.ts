@@ -11,11 +11,12 @@ if (existsSync(envFilePath)) {
 export default defineConfig({
 
   testDir: './tests',
+  testIgnore: '**/gocare/**',
 
   timeout: 20 * 1000, //30000 ms(30 secs) 
   fullyParallel: false,
   //retries: process.env.CI ? 2 : 0, 
-  retries: 1,
+  retries: 0,
   //workers: process.env.CI ? 1 : undefined, 
   workers: 1,
 

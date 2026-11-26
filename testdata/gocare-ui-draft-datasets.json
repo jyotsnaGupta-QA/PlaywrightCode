@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "environment": "GoCare UAT web",
+  "rules": {
+    "positiveRecordKeys": "Resolve exact identifiers from the approved synthetic fixture manifest.",
+    "ordinaryDraftNames": "Use the fixed case values below. Generate an alphabetic case-ID suffix for independently authorized absent lookup variants, and verify the reserved name is absent in scope.",
+    "caseRelativeDates": {
+      "timezone": "Asia/Kolkata",
+      "format": "dd-MMM-yyyy",
+      "fromOffsetDays": -2,
+      "toOffsetDays": -1
+    }
+  },
+  "cases": {
+    "C15290445": {
+      "company": {
+        "label": "MY COMPANY",
+        "id": 129
+      },
+      "status": "Active",
+      "title": "Ms",
+      "gender": "Female",
+      "firstName": "Aster",
+      "lastName": "Garnet",
+      "dateOfBirth": "12-Feb-1982",
+      "secondaryEmail": "garnet@example.invalid",
+      "country": "Antarctica",
+      "assignmentCountry": "Antarctica",
+      "address": "27 Garnet Fixture Road",
+      "postalCode": "12345",
+      "town": "Garnet",
+      "phone": "12025550123",
+      "fax": "12025550124",
+      "notes": "Synthetic intake draft",
+      "additionalInformation": "Synthetic reference",
+      "guard": "Draft only. Block every form request.",
+      "nationality": "British",
+      "maritalStatus": "Single"
+    },
+    "C15290446": {
+      "company": {
+        "label": "MY COMPANY",
+        "id": 129
+      },
+      "assignmentCountry": "Antarctica",
+      "employeeStatus": "Inactive",
+      "guard": "Compare scoped option counts. Do not Search."
+    },
+    "C15290447": {
+      "company": {
+        "label": "MY COMPANY",
+        "id": 129
+      },
+      "relation": "Employee",
+      "initialType": "Health-Check item",
+      "changedType": "Overall Health Status",
+      "healthCheckItem": "BMI",
+      "category": "Standard",
+      "guard": "Allow only company criteria initialization. Do not Search or save."
+    },
+    "C15290448": {
+      "company": {
+        "label": "MY COMPANY",
+        "id": 129
+      },
+      "userRole": "Client Reviewer",
+      "lockStatus": "No",
+      "corporateAccountStatus": "No",
+      "guard": "Draft only. Do not Search."
+    },
+    "C15290449": {
+      "owner": {
+        "label": "MY COMPANY",
+        "id": 129
+      },
+      "companyName": "GarnetFixtureOwner",
+      "showOnlyActive": true,
+      "guard": "Recheck the reserved absent name. Allow only the exact scoped catalog Search."
+    },
+    "C15290450": {
+      "roles": [
+        "Client Reviewer",
+        "Partner"
+      ],
+      "guard": "Allow only role criteria initialization. Do not Submit."
+    },
+    "C15290451": {
+      "ginOrApplicantId": "",
+      "dateOfBirth": "",
+      "internationalSosId": "",
+      "guard": "Signed out. Block every lookup or form request."
+    },
+    "C8928028": {
+      "providerFirstName": "Aster",
+      "providerLastName": "Garnet",
+      "primaryEmail": "aster@example.invalid",
+      "town": "Garnet",
+      "postalCode": "12345",
+      "phone": "12025550123",
+      "fax": "12025550124",
+      "guard": "Public synthetic draft only. No registration or delivery.",
+      "medicalCenterContact": {
+        "lastName": "Garnet",
+        "physicianFirstName": "Aster",
+        "email": "center@example.invalid",
+        "openingTime": "09:00",
+        "closingTime": "18:00",
+        "address": "27 Garnet Fixture Road"
+      }
+    },
+    "C8934527": {
+      "validated": "Show only Validated",
+      "country": "Bouvet Island",
+      "showOnlyActive": true,
+      "guard": "Additional local draft branch only. Do not Search."
+    },
+    "C15290452": {
+      "rows": [
+        {
+          "route": "/Company/CompanyArea.aspx",
+          "navigation": "Search Employees > System Configuration > Company > Area",
+          "company": "MY COMPANY",
+          "companyControl": "ddlCompany",
+          "field": "txtArea",
+          "value": "GarnetFixtureArea"
+        },
+        {
+          "route": "/Company/CompanyBusinessArea.aspx",
+          "navigation": "Search Employees > System Configuration > Company > Business Area",
+          "company": "MY COMPANY",
+          "companyControl": "ddlCompany",
+          "field": "txtArea",
+          "value": "GarnetFixtureBusinessArea"
+        },
+        {
+          "route": "/Company/CompanyGeoMarket.aspx",
+          "navigation": "Search Employees > System Configuration > Company > Geo Market",
+          "company": "MY COMPANY",
+          "companyControl": "ddlCompanyName",
+          "field": "txtGeoMarketName",
+          "value": "GarnetFixtureGeoMarket"
+        },
+        {
+          "route": "/Company/CompanyJobSite.aspx",
+          "navigation": "Search Employees > System Configuration > Company > Job Site",
+          "company": "MY COMPANY",
+          "companyControl": "ddlCompany",
+          "field": "txtSite",
+          "value": "GarnetFixtureJobSite"
+        },
+        {
+          "route": "/Company/CompanyAdditionalInformation.aspx",
+          "navigation": "Search Employees > System Configuration > Company > Additional Information",
+          "company": "MY COMPANY",
+          "companyControl": "ddlCompany",
+          "field": "txtFieldName",
+          "value": "GarnetFixtureAdditional"
+        }
+      ],
+      "startEachRow": "Fresh page from Search Employees",
+      "initialShowOnlyActive": false,
+      "sequence": [
+        true,
+        false
+      ],
+      "expectedCriteria": "Retain exact typed input or selected label in both checkbox states",
+      "guard": "Block all Search and form requests."
+    },
+    "C15290453": {
+      "rows": [
+        {
+          "route": "/SystemConfiguration/SearchHealthCheckItem.aspx",
+          "navigation": "Search Employees > System Configuration > Medical Data > Health Check Item",
+          "field": "tbxSearch",
+          "value": "GarnetFixtureHealth"
+        },
+        {
+          "route": "/SystemConfiguration/MedicalHistoryItem.aspx",
+          "navigation": "Search Employees > System Configuration > Medical Data > Medical History",
+          "field": "txtSearchName",
+          "value": "GarnetFixtureHistory"
+        },
+        {
+          "route": "/SystemConfiguration/VaccinationMaster.aspx",
+          "navigation": "Search Employees > System Configuration > Medical Data > Vaccination",
+          "field": "txtVaccinationName",
+          "value": "GarnetFixtureVaccine"
+        },
+        {
+          "route": "/SystemConfiguration/VaccinationReminder.aspx",
+          "navigation": "Search Employees > System Configuration > Medical Data > Vaccination Reminder",
+          "field": "ddlReminderType",
+          "value": "Reminder Type1"
+        }
+      ],
+      "startEachRow": "Fresh page from Search Employees",
+      "initialShowOnlyActive": false,
+      "sequence": [
+        true,
+        false
+      ],
+      "expectedCriteria": "Retain exact typed input or selected label in both checkbox states",
+      "guard": "Block all Search and form requests."
+    }
+  }
+}

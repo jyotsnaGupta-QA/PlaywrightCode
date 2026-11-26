@@ -38,22 +38,42 @@ async function getApplicationScope(page) {
 
 // ======================================================
 // PRINT DIAGNOSTICS
-// ======================================================
 
 async function printFrameDiagnostics(scope) {
+    console.log('\n========== TABLE DIAGNOSTICS ==========');
+
     const tables = scope.locator('table');
+    const tableCount = await tables.count();
 
-    for (let i = 0; i < await tables.count(); i++) {
+    console.log('Total tables:', tableCount);
+
+    for (let i = 0; i < tableCount; i++) {
         const table = tables.nth(i);
+
+        console.log(`\nTable ${i}`);
+        console.log('ID:', await table.getAttribute('id'));
+        console.log('Class:', await table.getAttribute('class'));
+        console.log('Rows:', await table.locator('tr').count());
+        console.log(
+            'Text:',
+            (await table.innerText()).substring(0, 500)
+        );
     }
+    console.log('Frame URL:', scope.url());
 
-    const inputs = scope.locator('input');
+    console.log(
+        'Invoice grid count:',
+        await scope.locator('#gdvInvoices').count()
+    );
 
-    for (let i = 0; i < await inputs.count(); i++) {
-        const input = inputs.nth(i);
+    console.log(
+        'Tables containing Invoice:',
+        await scope.locator('table').filter({
+            hasText: /invoice/i
+        }).count()
+    );
 
-    }
-
+    console.log('========== END TABLE DIAGNOSTICS ==========\n');
 }
 
 // ======================================================
@@ -434,27 +454,13 @@ test.describe('Costing EUR and USD Validation', () => {
         await navigateToMedicalExamDetails(page);
 
         // Identify Medical Exam Details iframe.
-        const scope = await getApplicationScope(page);
+        let scope = await getApplicationScope(page);
         // Costing controls
-        const originalAmountInput = scope.locator('#txtOriginalAmount');
-        const currencyDropdown = scope.locator('#ddlCurrency');
-        const eurInput = scope.locator('#txtEUREquivalent');
-        const usdInput = scope.locator('#txtUSDEquivalent');
-        const addButton = scope.locator('#btnAddInvoice');
-
-        // Print diagnostics.
-        await printFrameDiagnostics(scope);
-
-        // Find Costing controls.
-        // Check whether the costing grid already exists
-
-        // Wait for costing controls
-        await expect(originalAmountInput).toBeVisible({ timeout: 30000 });
-        await expect(currencyDropdown).toBeVisible({ timeout: 30000 });
-        await expect(addButton).toBeVisible({ timeout: 30000 });
-
-        await originalAmountInput.scrollIntoViewIfNeeded();
-        await currencyDropdown.scrollIntoViewIfNeeded();
+        let originalAmountInput = scope.locator('#txtOriginalAmount');
+        let currencyDropdown = scope.locator('#ddlCurrency');
+        let eurInput = scope.locator('#txtEUREquivalent');
+        let usdInput = scope.locator('#txtUSDEquivalent');
+        let addButton = scope.locator('#btnAddInvoice');
 
         await currencyDropdown.scrollIntoViewIfNeeded();
 
@@ -544,6 +550,17 @@ test.describe('Costing EUR and USD Validation', () => {
                     await usdInput.inputValue()
                 );
 
+                // Capture values before clicking Add.
+                console.log(
+                    'EUR field before Add:',
+                    await eurInput.inputValue()
+                );
+
+                console.log(
+                    'USD field before Add:',
+                    await usdInput.inputValue()
+                );
+
                 // 4. Count existing Costing records.
                 // Grid may not exist before the first Add.
                 let costingTable = await findCostingTable(scope);
@@ -576,39 +593,138 @@ test.describe('Costing EUR and USD Validation', () => {
                 ).toBe(previousCount + 1);
 
                 await scope.waitForTimeout(2000);
+                // Inspect the newly added invoice before saving.
+                const newlyAddedRow = existingRows.nth(previousCount);
 
-                const allTables = scope.locator('table');
+                console.log(
+                    'Newly added invoice row:',
+                    await newlyAddedRow.locator('td').allInnerTexts()
+                );
 
-                // 7. Read newly added record.
-                const newRecord = existingRows.last();
+                console.log('EUR field after Add:', await eurInput.inputValue());
+                console.log('USD field after Add:', await usdInput.inputValue());
 
-                await expect(newRecord).toBeVisible();
+                // Save Medical Exam Details
+                const saveButton = scope.locator('#BtnSave');
 
-                const cells = newRecord.locator('td');
+                await expect(saveButton).toBeVisible();
+                await expect(saveButton).toBeEnabled();
 
-                if (await cells.count() < 5) {
+                // Wait for iframe navigation.
+                const frameRefresh = page.waitForEvent('framenavigated', {
+                    predicate: frame =>
+                        DETAIL_FRAME_URL.test(frame.url()),
+                    timeout: 30000
+                });
+
+                // Handle confirmation popup only once.
+                page.once('dialog', async dialog => {
+                    console.log('Confirmation popup:', dialog.message());
+                    await dialog.accept();
+                });
+
+                // Save only once.
+                await saveButton.click();
+
+                // Wait for iframe refresh.
+                await frameRefresh;
+
+                console.log('Medical Exam Details iframe refreshed successfully.');
+
+                // Get refreshed iframe.
+                // Get refreshed iframe.
+                scope = await getApplicationScope(page);
+
+                // Wait until the refreshed iframe finishes loading.
+                await scope.waitForLoadState('domcontentloaded', {
+                    timeout: 30000
+                });
+
+                // Give the page a moment to render its content.
+                await scope.waitForTimeout(2000);
+
+                // Print diagnostics from the refreshed iframe.
+                console.log('Refreshed iframe URL:', scope.url());
+                console.log('Page title:', await scope.title());
+
+                const bodyText = await scope.locator('body').innerText();
+                console.log('Refreshed iframe body text:', bodyText.substring(0, 2000));
+
+                await printFrameDiagnostics(scope);
+
+                console.log(
+                    'Invoice grid count:',
+                    await scope.locator('#gdvInvoices').count()
+                );
+
+                // Locate saved invoice grid.
+                const savedTable = await findCostingTable(scope);
+
+                if (!savedTable) {
                     throw new Error(
-                        'New Costing record has fewer than 5 cells. Verify table column indexes.'
+                        'Saved invoice grid not found after refresh. Check iframe body text above.'
                     );
                 }
 
-                // Table structure:
-                // 0 = Invoice Number
-                // 1 = Original Amount
-                // 2 = Currency
-                // 3 = EUR
-                // 4 = USD
-                // 5 = Actions
+                await expect(savedTable).toBeVisible();
 
+                if (!savedTable) {
+                    throw new Error(
+                        'Saved invoice grid not found after refresh.'
+                    );
+                }
+
+                await expect(savedTable).toBeVisible();
+
+                // Get the latest saved invoice record.
+                const savedRows = savedTable.locator('tr:has(td)');
+                const savedRecord = savedRows.last();
+
+                await expect(savedRecord).toBeVisible();
+
+                const cells = savedRecord.locator('td');
+
+                if (await cells.count() < 5) {
+                    throw new Error(
+                        'Saved invoice record has fewer than 5 cells. Verify table column indexes.'
+                    );
+                }
+
+                console.log(
+                    'Saved invoice row:',
+                    await cells.allInnerTexts()
+                );
+
+                // Verify saved currency.
+                const savedCurrencyText = (
+                    await cells.nth(2).innerText()
+                ).trim();
+
+                // Extract only the currency code before the exchange-rate details.
+                const savedCurrency = savedCurrencyText.split('|')[0].trim();
+
+                if (savedCurrency !== currencyCode) {
+                    throw new Error(
+                        `Currency mismatch. Expected ${currencyCode}, saved ${savedCurrency}`
+                    );
+                }
+
+                console.log('Saved currency:', savedCurrency);
+                console.log('Full saved currency text:', savedCurrencyText);
+
+                console.log('Saved currency:', savedCurrency);
+
+                // Read saved EUR and USD values.
                 actualEur = getNumber(
                     await cells.nth(3).innerText(),
-                    'Actual EUR'
+                    'Saved Actual EUR'
                 );
 
                 actualUsd = getNumber(
                     await cells.nth(4).innerText(),
-                    'Actual USD'
+                    'Saved Actual USD'
                 );
+
 
                 // 8. Compare expected and actual amounts.
                 eurResult = compareAmounts(
@@ -628,6 +744,8 @@ test.describe('Costing EUR and USD Validation', () => {
                         : 'FAIL';
 
                 console.log('\nVALIDATION RESULTS');
+                console.log('Currency:', currencyCode);
+                console.log('Original Amount:', originalAmount);
                 console.log('Expected EUR:', expectedEur);
                 console.log('Actual EUR:', actualEur);
                 console.log('EUR Result:', eurResult);
@@ -648,6 +766,10 @@ test.describe('Costing EUR and USD Validation', () => {
                 failed++;
                 overallResult = 'FAIL';
 
+                console.error(
+                    `Error while processing Excel row ${rowNumber}:`,
+                    error
+                );
             }
 
             // Update the same Excel file.

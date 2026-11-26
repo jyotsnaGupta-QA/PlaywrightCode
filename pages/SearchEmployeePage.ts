@@ -79,6 +79,31 @@ export class SearchEmployeePage {
     await this.searchButton.click();
   }
 
+  async searchByGIN(gin: string) {
+    await this.setGIN(gin);
+    await this.clickSearch();
+
+    const matchingRows = this.rowsMatchingGIN(gin);
+    const noResultsMessage = this.page
+      .locator('.InformationBg, .ErrorBg')
+      .filter({ hasText: 'There are no employees available for the search performed.' });
+
+    await expect.poll(
+      async () => (await matchingRows.count()) > 0 || await noResultsMessage.isVisible(),
+      {
+        message: 'Employee search did not return a matching row or an explicit no-results message.',
+        timeout: 10000,
+      },
+    ).toBe(true);
+  }
+
+  private rowsMatchingGIN(gin: string): Locator {
+    const table = this.page.locator('#ctl00_MedtrackContentPlaceHolder_gdvSearchResult');
+    return table.getByRole('row').filter({
+      has: table.getByRole('cell', { name: gin, exact: true }),
+    });
+  }
+
   async clickReset() {
     await this.resetButton.click();
   }
@@ -87,14 +112,39 @@ export class SearchEmployeePage {
     await this.advancedSearchLink.click();
   }
 
-  async verifyRecordExists(lastName: string, gin: string) {
-    const table = this.page.locator('#ctl00_MedtrackContentPlaceHolder_gdvSearchResult');
-    const resultRow = table
-      .getByRole('row')
-      .filter({ hasText: lastName })
+  async verifyRecordExists(firstName: string, gin: string) {
+    const table = this.page.locator(
+      '#ctl00_MedtrackContentPlaceHolder_gdvSearchResult'
+    );
+
+    const resultRow = table.locator('tr')
+      .filter({ hasText: firstName })
       .filter({ hasText: gin });
+
     await expect(resultRow).toHaveCount(1);
     await expect(resultRow).toBeVisible();
+  }
+
+  async hasRecordWithGIN(gin: string) {
+    const matchingRows = this.rowsMatchingGIN(gin);
+
+    if ((await matchingRows.count()) > 0) {
+      return true;
+    }
+
+    await this.verifyNoMatchingResults();
+    return false;
+  }
+
+  async verifyEmployeeDetails(firstName: string, lastName: string, gin: string) {
+    const resultRow = this.rowsMatchingGIN(gin)
+      .filter({ hasText: firstName })
+      .filter({ hasText: lastName });
+
+    await expect(resultRow).toHaveCount(1);
+    await expect(resultRow.getByRole('cell', { name: firstName, exact: true })).toBeVisible();
+    await expect(resultRow.getByRole('cell', { name: lastName, exact: true })).toBeVisible();
+    await expect(resultRow.getByRole('cell', { name: gin, exact: true })).toBeVisible();
   }
 
   async verifyCertificateExpiryDateColumn() {
